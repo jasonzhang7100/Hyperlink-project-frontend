@@ -1,1 +1,1 @@
-export { default } from './BookingHeaderBar';
+export { default } from './BookingHeaderBar'
