@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
+<<<<<<< HEAD
 
 import Layout from './components/Layout';
 import Home from './pages/Home';
@@ -8,8 +9,31 @@ import Login from './pages/Login';
 import Admin from './pages/Admin';
 import Booking from './pages/Booking';
 import MyBooking from './pages/MyBooking';
+||||||| merged common ancestors
+
+import Routes from './components/Routes';
+import Header from './components/Header';
+import Footer from './components/Footer';
+=======
+import Roboto from './assets/fonts/Roboto/Roboto-Regular.ttf';
+import Raleway from './assets/fonts/Raleway/Raleway-VariableFont_wght.ttf';
+import Routes from './components/Routes';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import BookingForm from './pages/BookingForm';
+>>>>>>> booking inital version without error validation
 
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: 'Roboto';
+    src: url(${Roboto}) format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Raleway';
+    src: url(${Raleway}) format('truetype');
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -23,6 +47,7 @@ const GlobalStyle = createGlobalStyle`
 const App = () => (
   <BrowserRouter>
     <GlobalStyle />
+<<<<<<< HEAD
     <Layout>
       <Switch>
         {/* 能不用exact就不用exact，Home主页的路径短，放最下面可防长路径被它覆盖 */}
@@ -36,6 +61,18 @@ const App = () => (
       </Switch>
     </Layout>
   </BrowserRouter>
+||||||| merged common ancestors
+    <Header />
+    <Routes />
+    <Footer />
+  </>
+=======
+    <Header />
+    <BookingForm />
+    <Routes />
+    <Footer />
+  </>
+>>>>>>> booking inital version without error validation
 );
 
 export default App;
