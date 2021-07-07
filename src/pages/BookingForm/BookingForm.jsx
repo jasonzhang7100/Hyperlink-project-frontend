@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import Input from '../../components/Input';
 
 const Title = styled.h2`
   font-family: 'Roboto';
@@ -11,7 +12,7 @@ const Title = styled.h2`
       margin: 0;
     `,
     secondary: css`
-      margin: 54px 0px 27px 0px;
+      margin: 45px 0px 25px 0px;
     `,
   }[props.variant])}
 `;
@@ -22,7 +23,7 @@ const SubTitle = styled.p`
   font-weight: 600;
   letter-spacing: 0.14px;
   text-align: center;
-  margin: 9px 0 40px 0;
+  margin: 10px 0 40px 0;
 `;
 
 const Form = styled.form`
@@ -31,31 +32,30 @@ const Form = styled.form`
   align-items: center;
 `;
 
-const Input = styled.input`
-  border: none;
-  border-radius: 3px;
-  background-color: rgba(196, 196, 196, 0.23);
-  height: 40px;
-  padding: 0 10px;
-  
-  ${(props) => ({
-    sm: css`
-      width: 160px;
-      margin: 0px 10px 21px 10px;
-    `,
-    lg: css`
-      width: 360px;
-      margin: 0px 0px 21px 0px;
-    `,
-  }[props.variant])}
-`;
+const FormItem = styled.div`
+  font-family: 'Roboto';
+  display: flex;
+  flex-direction: column;
+`
+const ItemContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const Label = styled.label`
+  margin: 0 0 5px 5px;
+`
 
 const Checkbox = styled.div`
   font-family: 'Raleway';
   text-align: left;
 `;
 
-export default class BookingForm extends React.Component {
+const CheckItem = styled.div`
+  margin-bottom: 5px;
+`
+
+class BookingForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -102,69 +102,96 @@ export default class BookingForm extends React.Component {
             // console.log(data);
           }}
         >
-          <div>
+          <ItemContainer>
+            <FormItem>
+              <Label htmlFor="selectedDate">Date</Label>
+              <Input
+                variant="sm"
+                name="selectedDate"
+                id="selectedDate"
+                placeholder="06/06/2021"
+                type="text"
+                value={data.selectedDate}
+                disabled
+              />
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="guestNumber">Number of guests</Label>
+              <Input
+                variant="sm"
+                name="guestNumber"
+                id="guestNumber"
+                placeholder="1"
+                value={data.guestNumber}
+                type="number"
+                onChange={this.handleDataChange}
+              />
+            </FormItem>
+          </ItemContainer>
+          <ItemContainer>
+            <FormItem>
+              <Label htmlFor="firstName">First Name</Label> 
+              <Input
+                variant="sm"
+                name="firstName"
+                id="firstName"
+                placeholder="John"
+                type="text"
+                value={data.firstName}
+                onChange={this.handleDataChange}
+              />
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="lastName">Last Name</Label>
+              <Input
+                variant="sm"
+                name="lastName"
+                id="lastName"
+                placeholder="Mayer"
+                type="text"
+                value={data.lastName}
+                onChange={this.handleDataChange}
+              />
+            </FormItem>
+          </ItemContainer>
+          <FormItem>
+            <Label htmlFor="email">Email</Label>
             <Input
-              variant="sm"
-              name="selectedDate"
-              placeholder="06/06/2021"
-              type="text"
-              value={data.selectedDate}
-              disabled
+              variant="lg"
+              name="email"
+              id="email"
+              placeholder="johnmayer19@gmail.com"
+              type="email"
+              value={data.email}
+              onChange={this.handleDataChange}
             />
+          </FormItem>
+          <FormItem>
+            <Label htmlFor="phoneNumber">Phone number</Label>
             <Input
-              variant="sm"
-              name="guestNumber"
-              placeholder="Number of guests"
-              value={data.guestNumber}
+              variant="lg"
+              name="phoneNumber"
+              id="phoneNumber"
+              placeholder="0412345678"
               type="number"
+              value={data.phoneNumber}
               onChange={this.handleDataChange}
             />
-          </div>
-          <div>
+          </FormItem>
+          <FormItem>
+            <Label htmlFor="birthDate">Date of birth</Label>
             <Input
-              variant="sm"
-              name="firstName"
-              placeholder="First Name"
-              type="text"
-              value={data.firstName}
+              variant="lg"
+              name="birthDate"
+              id="birthDate"
+              type="date"
+              value={data.birthDate}
               onChange={this.handleDataChange}
             />
-            <Input
-              variant="sm"
-              name="lastName"
-              placeholder="Last Name"
-              type="text"
-              value={data.lastName}
-              onChange={this.handleDataChange}
-            />
-          </div>
-          <Input
-            variant="lg"
-            name="email"
-            placeholder="Email"
-            type="email"
-            value={data.email}
-            onChange={this.handleDataChange}
-          />
-          <Input
-            variant="lg"
-            name="phoneNumber"
-            placeholder="Phone number"
-            type="number"
-            value={data.phoneNumber}
-            onChange={this.handleDataChange}
-          />
-          <Input
-            variant="lg"
-            name="birthDate"
-            placeholder="Date of birth"
-            type="date"
-            value={data.birthDate}
-            onChange={this.handleDataChange}
-          />
+          </FormItem>
           <Title variant="secondary">Please read and select all before the payment</Title>
           <Checkbox>
-            <label htmlFor="ageChecked">
+            <CheckItem>
               <input
                 name="ageChecked"
                 type="checkbox"
@@ -172,10 +199,11 @@ export default class BookingForm extends React.Component {
                 checked={data.ageChecked}
                 onChange={this.handleDataChange}
               />
-              All guest in my booking are over 15 years of age
-            </label>
-            <br />
-            <label htmlFor="towelChecked">
+              <Label htmlFor="ageChecked">
+                All guest in my booking are over 15 years of age
+              </Label>
+            </CheckItem>
+            <CheckItem>
               <input
                 name="towelChecked"
                 type="checkbox"
@@ -183,10 +211,11 @@ export default class BookingForm extends React.Component {
                 checked={data.towelChecked}
                 onChange={this.handleDataChange}
               />
-              I will either bring my own large bath towel or purchase one on the day
-            </label>
-            <br />
-            <label htmlFor="acknowledgeChecked">
+              <Label htmlFor="towelChecked">
+                I will either bring my own large bath towel or purchase one on the day
+              </Label>
+            </CheckItem>
+            <CheckItem>
               <input
                 name="acknowledgeChecked"
                 type="checkbox"
@@ -194,11 +223,15 @@ export default class BookingForm extends React.Component {
                 checked={data.acknowledgeChecked}
                 onChange={this.handleDataChange}
               />
-              I understand this is a booking enquiry and not confirmation of booking
-            </label>
+              <Label htmlFor="acknowledgeChecked">
+                I understand this is a booking enquiry and not confirmation of booking
+              </Label>
+            </CheckItem>
           </Checkbox>
         </Form>
       </>
     );
   }
 }
+
+export default BookingForm;
