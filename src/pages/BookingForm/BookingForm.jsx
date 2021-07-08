@@ -36,15 +36,15 @@ const FormItem = styled.div`
   font-family: 'Roboto';
   display: flex;
   flex-direction: column;
-`
+`;
 const ItemContainer = styled.div`
   display: flex;
   flex-direction: row;
-`
+`;
 
 const Label = styled.label`
   margin: 0 0 5px 5px;
-`
+`;
 
 const Checkbox = styled.div`
   font-family: 'Raleway';
@@ -53,7 +53,7 @@ const Checkbox = styled.div`
 
 const CheckItem = styled.div`
   margin-bottom: 5px;
-`
+`;
 
 class BookingForm extends React.Component {
   constructor(props) {
@@ -130,7 +130,7 @@ class BookingForm extends React.Component {
           </ItemContainer>
           <ItemContainer>
             <FormItem>
-              <Label htmlFor="firstName">First Name</Label> 
+              <Label htmlFor="firstName">First Name</Label>
               <Input
                 variant="sm"
                 name="firstName"
