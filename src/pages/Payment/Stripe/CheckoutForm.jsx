@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -42,11 +42,38 @@ const Button = styled.button`
   cursor: pointer;
   transition: all 100ms ease-in-out;
   will-change: transform, background-color, box-shadow;
+
+  ${(props) =>
+    ({
+      true: `
+        background-color: grey;
+      `,
+    }[props.disabled || false])}
 `;
 
-const CheckoutForm = () => {
+const Error = styled.div`
+  color: red;
+  margin: 0 auto 10px auto;
+`;
+
+const CheckoutForm = (props) => {
   const stripe = useStripe();
   const elements = useElements();
+  const [error, setError] = useState(null);
+  const [load, setLoad] = useState(false);
+  const [confirm, setConfirm] = useState(null);
+
+  const resetError = () => {
+    setError(null);
+  };
+
+  const setErrorMessage = (error) => {
+    if (error) {
+      setError(error.message);
+    } else {
+      resetError();
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -54,29 +81,35 @@ const CheckoutForm = () => {
       type: 'card',
       card: elements.getElement(CardElement),
     });
-
     if (!error) {
       console.log('Stripe 23 | token generated!', paymentMethod);
       // send token to backend here
-      // try {
-      //   const { id } = paymentMethod;
-      //   const response = await axios.post(
-      //     'http://localhost:8080/stripe/charge',
-      //     {
-      //       amount: 999,
-      //       id,
-      //     }
-      //   );
-
-      //   console.log('Stripe 35 | data', response.data.success);
-      //   if (response.data.success) {
-      //     console.log('CheckoutForm.js 25 | payment successful!');
-      //   }
-      // } catch (error) {
-      //   console.log('CheckoutForm.js 28 | ', error);
-      // }
+      setLoad(true);
+      setConfirm('the payment is being processed......');
+      try {
+        const { id } = paymentMethod;
+        const response = await axios.post(
+          'http://localhost:3000/api/stripe/charge',
+          {
+            amount: 16000,
+            id,
+            receipt_email: 'customer@example.com', // TO-DO: get email from booking page.
+          }
+        );
+        console.log('Stripe 35 | data', response.data.success);
+        if (response.data.success) {
+          console.log('CheckoutForm.js 25 | payment successful!');
+          setConfirm('payment successful!');
+        }
+      } catch (error) {
+        console.log('CheckoutForm.js 28 | ', error);
+        setError(error.message);
+        setLoad(false);
+      }
     } else {
       console.log(error.message);
+      setError(error.message);
+      setLoad(false);
     }
   };
 
@@ -84,15 +117,24 @@ const CheckoutForm = () => {
     <Form onSubmit={handleSubmit}>
       <FormGroup>
         <FormRow>
-          <CardElement />
+          <CardElement
+            onChange={(e) => {
+              setErrorMessage(e.error);
+            }}
+          />
         </FormRow>
       </FormGroup>
-
+      <Error>{error}</Error>
+      <div>
+        <b>Order total:</b> AU$160.00
+      </div>
       <FormStatement>
         By proceeding, I agree with the terms of the license agreement, privacy
         policy and terms and conditions.
       </FormStatement>
-      <Button>PAY</Button>
+      <Button disabled={load}>Pay</Button>
+      <br />
+      <div>{confirm}</div>
     </Form>
   );
 };
