@@ -7,10 +7,12 @@ import Footer from './components/Footer';
 
 const GlobalStyle = createGlobalStyle`
   body {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: #e0e0e0;
+    background-color: #cacaca;
+  }
+  * {
+    box-sizing: border-box;
   }
 `;
 

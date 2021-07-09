@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Calendar from './components/Calendar';
 
 const Container = styled.div`
+  overflow: hidden;
   width: 900px;
   height: 880px;
   border-radius: 50px;
@@ -12,14 +13,31 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const Title = styled.div``;
+const Title = styled.h1`
+  margin-top: 61px;
+  margin-bottom: 10px;
+  color: #171a4f;
+  font: bold 36px 'Baloo';
+`;
+
+const Info = styled.div`
+  font: 16px 'Roboto';
+`;
 
 const Legend = styled.div`
   display: flex;
-  justify-content: space-around;
+  align-items: center;
+  margin-left: 80px;
+  height: 100px;
 `;
 
-const LegendImg = styled.div``;
+const LegendImg = styled.span`
+  display: inline-block;
+  margin: 0 12px 0 70px;
+  width: 19px;
+  height: 19px;
+  background-color: ${({ color }) => color};
+`;
 
 class Home extends React.Component {
   constructor(props) {
@@ -30,15 +48,17 @@ class Home extends React.Component {
   render() {
     return (
       <Container>
-        <Title>
-          <h2>Day Pass Availability</h2>
-          <h3>Please click on the date you wish to book</h3>
-        </Title>
+        <Title>Day Pass Availability</Title>
+        <Info>Please click on the date you wish to book</Info>
         <Legend>
-          <LegendImg>Available</LegendImg>
-          <LegendImg>limited</LegendImg>
-          <LegendImg>Fully Booked</LegendImg>
-          <LegendImg>Closed</LegendImg>
+          <LegendImg color="#bcff2e" />
+          Available
+          <LegendImg color="#ffab2e" />
+          limited
+          <LegendImg color="#ff2e2e" />
+          Fully Booked
+          <LegendImg color="#818181" />
+          Closed
         </Legend>
         <Calendar />
       </Container>
