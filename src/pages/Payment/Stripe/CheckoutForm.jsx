@@ -8,6 +8,8 @@ import {
 import axios from 'axios';
 import styled from 'styled-components';
 
+import { USER_INFO, BASE_URL } from '../constant';
+
 const Form = styled.form`
   margin: 20px auto;
   max-width: 381px;
@@ -79,6 +81,18 @@ class CheckoutForm extends React.Component {
     else this.setState({ error: undefined });
   };
 
+  //add user details to mongodb through backend.
+  addUser = async () => {
+    const json = JSON.stringify(USER_INFO);
+    const res = await axios.post(`${BASE_URL}/api/users`, json, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log(res.data);
+  };
+
   handleSubmit = async (event) => {
     // Block native form submission.
     event.preventDefault();
@@ -102,9 +116,11 @@ class CheckoutForm extends React.Component {
     });
 
     if (error) {
+      // when the card details are not valid.
       console.log('[error]', error.message);
       this.setState({ error: error.message });
     } else {
+      //when the card details are valid.
       console.log('Stripe 23 | token generated!', paymentMethod);
       // send token to backend here
       this.setState({
@@ -115,24 +131,28 @@ class CheckoutForm extends React.Component {
         },
       });
       console.log(this.state);
+
       try {
+        // send payment info to backend
         const { id } = paymentMethod;
-        const response = await axios.post(
-          'http://localhost:3000/api/stripe/charge',
-          {
-            amount: 16000,
-            id,
-            receipt_email: 'customer@example.com', // TO-DO: get email from booking page.
-          }
-        );
+        const response = await axios.post(`${BASE_URL}/api/stripe/charge`, {
+          amount: 16000,
+          id,
+          receipt_email: 'customer@example.com',
+        });
+        // check whether the payment was successful.
         console.log('Stripe 35 | data', response.data.success);
         if (response.data.success) {
+          //when payment was successful
           console.log('CheckoutForm.js 25 | payment successful!');
           this.setState({
             data: { confirm: 'payment successful!', load: true },
           });
+          // after successful payment, add the user details to db.
+          this.addUser();
         }
       } catch (error) {
+        // when payment was unsuccessful
         console.log('CheckoutForm.js 28 | ', error);
         this.setState({
           error: error.message,
