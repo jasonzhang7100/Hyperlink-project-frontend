@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import React from 'react';
+import {
+  CardElement,
+  ElementsConsumer,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js';
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -56,36 +61,60 @@ const Error = styled.div`
   margin: 0 auto 10px auto;
 `;
 
-const CheckoutForm = (props) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [error, setError] = useState(null);
-  const [load, setLoad] = useState(false);
-  const [confirm, setConfirm] = useState(null);
+class CheckoutForm extends React.Component {
+  constructor(props) {
+    super(props);
 
-  const resetError = () => {
-    setError(null);
+    this.state = {
+      error: undefined,
+      data: {
+        load: false,
+        confirm: undefined,
+      },
+    };
+  }
+
+  setErrorMessage = (error) => {
+    if (error) this.setState({ error: error.message });
+    else this.setState({ error: undefined });
   };
 
-  const setErrorMessage = (error) => {
-    if (error) {
-      setError(error.message);
-    } else {
-      resetError();
-    }
-  };
-
-  const handleSubmit = async (event) => {
+  handleSubmit = async (event) => {
+    // Block native form submission.
     event.preventDefault();
+
+    const { stripe, elements, user } = this.props;
+
+    if (!stripe || !elements) {
+      // Stripe.js has not loaded yet. Make sure to disable
+      // form submission until Stripe.js has loaded.
+      return;
+    }
+
+    // Get a reference to a mounted CardElement. Elements knows how
+    // to find your CardElement because there can only ever be one of
+    // each type of element.
+    const cardElement = elements.getElement(CardElement);
+
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
-      card: elements.getElement(CardElement),
+      card: cardElement,
     });
-    if (!error) {
+
+    if (error) {
+      console.log('[error]', error.message);
+      this.setState({ error: error.message });
+    } else {
       console.log('Stripe 23 | token generated!', paymentMethod);
       // send token to backend here
-      setLoad(true);
-      setConfirm('the payment is being processed......');
+      this.setState({
+        error: undefined,
+        data: {
+          load: true,
+          confirm: 'the payment is being processed......',
+        },
+      });
+      console.log(this.state);
       try {
         const { id } = paymentMethod;
         const response = await axios.post(
@@ -99,44 +128,61 @@ const CheckoutForm = (props) => {
         console.log('Stripe 35 | data', response.data.success);
         if (response.data.success) {
           console.log('CheckoutForm.js 25 | payment successful!');
-          setConfirm('payment successful!');
+          this.setState({
+            data: { confirm: 'payment successful!', load: true },
+          });
         }
       } catch (error) {
         console.log('CheckoutForm.js 28 | ', error);
-        setError(error.message);
-        setLoad(false);
+        this.setState({
+          error: error.message,
+          data: { load: false },
+        });
       }
-    } else {
-      console.log(error.message);
-      setError(error.message);
-      setLoad(false);
     }
   };
 
+  render() {
+    const { error, data } = this.state;
+
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        <FormGroup>
+          <FormRow>
+            <CardElement
+              onChange={(e) => {
+                console.log(e.error);
+                this.setErrorMessage(e.error);
+              }}
+            />
+          </FormRow>
+        </FormGroup>
+        <Error>{error}</Error>
+        <div>
+          <b>Order total:</b> AU$160.00
+        </div>
+        <FormStatement>
+          By proceeding, I agree with the terms of the license agreement,
+          privacy policy and terms and conditions.
+        </FormStatement>
+        <Button type="submit" disabled={data.load}>
+          Pay
+        </Button>
+        <br />
+        <div>{data.confirm}</div>
+      </Form>
+    );
+  }
+}
+
+const InjectedCheckoutForm = ({ user }) => {
   return (
-    <Form onSubmit={handleSubmit}>
-      <FormGroup>
-        <FormRow>
-          <CardElement
-            onChange={(e) => {
-              setErrorMessage(e.error);
-            }}
-          />
-        </FormRow>
-      </FormGroup>
-      <Error>{error}</Error>
-      <div>
-        <b>Order total:</b> AU$160.00
-      </div>
-      <FormStatement>
-        By proceeding, I agree with the terms of the license agreement, privacy
-        policy and terms and conditions.
-      </FormStatement>
-      <Button disabled={load}>Pay</Button>
-      <br />
-      <div>{confirm}</div>
-    </Form>
+    <ElementsConsumer>
+      {({ elements, stripe }) => (
+        <CheckoutForm elements={elements} stripe={stripe} user={user} />
+      )}
+    </ElementsConsumer>
   );
 };
 
-export default CheckoutForm;
+export default InjectedCheckoutForm;
