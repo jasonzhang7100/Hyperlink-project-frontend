@@ -69,10 +69,8 @@ class CheckoutForm extends React.Component {
 
     this.state = {
       error: undefined,
-      data: {
-        load: false,
-        confirm: undefined,
-      },
+      confirmMessage: undefined,
+      isButtonDisabled: false,
     };
   }
 
@@ -83,14 +81,18 @@ class CheckoutForm extends React.Component {
 
   //add user details to mongodb through backend.
   addUser = async () => {
-    const json = JSON.stringify(USER_INFO);
-    const res = await axios.post(`${BASE_URL}/api/users`, json, {
-      headers: {
-        // Overwrite Axios's automatically set Content-Type
-        'Content-Type': 'application/json',
-      },
-    });
-    console.log(res.data);
+    try {
+      const json = JSON.stringify(USER_INFO); //这里是假数据，需要从booking details取得数据
+      const res = await axios.post(`${BASE_URL}/api/users`, json, {
+        headers: {
+          // Overwrite Axios's automatically set Content-Type
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   handleSubmit = async (event) => {
@@ -100,14 +102,9 @@ class CheckoutForm extends React.Component {
     const { stripe, elements, user } = this.props;
 
     if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
       return;
     }
 
-    // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
     const cardElement = elements.getElement(CardElement);
 
     const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -125,10 +122,8 @@ class CheckoutForm extends React.Component {
       // send token to backend here
       this.setState({
         error: undefined,
-        data: {
-          load: true,
-          confirm: 'the payment is being processed......',
-        },
+        confirmMessage: 'the payment is being processed......',
+        isButtonDisabled: true,
       });
       console.log(this.state);
 
@@ -138,15 +133,17 @@ class CheckoutForm extends React.Component {
         const response = await axios.post(`${BASE_URL}/api/stripe/charge`, {
           amount: 16000,
           id,
-          receipt_email: 'customer@example.com',
+          receipt_email: 'customer@example.com', //需要从booking details取得数据
         });
+
         // check whether the payment was successful.
         console.log('Stripe 35 | data', response.data.success);
         if (response.data.success) {
           //when payment was successful
           console.log('CheckoutForm.js 25 | payment successful!');
           this.setState({
-            data: { confirm: 'payment successful!', load: true },
+            confirmMessage: 'payment successful!',
+            isButtonDisabled: true,
           });
           // after successful payment, add the user details to db.
           this.addUser();
@@ -156,14 +153,15 @@ class CheckoutForm extends React.Component {
         console.log('CheckoutForm.js 28 | ', error);
         this.setState({
           error: error.message,
-          data: { load: false },
+          confirmMessage: undefined,
+          isButtonDisabled: false,
         });
       }
     }
   };
 
   render() {
-    const { error, data } = this.state;
+    const { error, confirmMessage, isButtonDisabled } = this.state;
 
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -185,11 +183,11 @@ class CheckoutForm extends React.Component {
           By proceeding, I agree with the terms of the license agreement,
           privacy policy and terms and conditions.
         </FormStatement>
-        <Button type="submit" disabled={data.load}>
+        <Button type="submit" disabled={isButtonDisabled}>
           Pay
         </Button>
         <br />
-        <div>{data.confirm}</div>
+        <div>{confirmMessage}</div>
       </Form>
     );
   }
