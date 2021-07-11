@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
+import CalendarDay from './components/CalendarDay';
 import buildCalendar from './buildCalendar';
-import setDayStyles from './setDayStyles';
 // 获得固定的假数据
 import getSessionData from './fakeData';
 
@@ -43,19 +43,6 @@ const CalendarWeekday = styled.span`
   border-right: solid 1px #c7c7c7;
   font: bold 0.9rem 'Roboto';
   line-height: 2.4rem;
-`;
-
-const CalendarDay = styled.span`
-  display: inline-block;
-  width: calc(100% / 7);
-  height: 5rem;
-  padding: 0.2rem 0.5rem;
-  border-bottom: solid 1px #c7c7c7;
-  border-right: solid 1px #c7c7c7;
-  background-color: ${({ colorStyles }) => colorStyles.bgColor};
-  color: ${({ colorStyles }) => colorStyles.numColor};
-  font: bold 1.2rem 'RobotoMono';
-  text-align: left;
 `;
 
 class Calendar extends React.Component {
@@ -118,14 +105,15 @@ class Calendar extends React.Component {
           <CalendarButton onClick={this.handleRightClick}>{'>'}</CalendarButton>
         </CalendarHeader>
         {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((weekday) => (
-          <CalendarWeekday>{weekday}</CalendarWeekday>
+          <CalendarWeekday key={weekday}>{weekday}</CalendarWeekday>
         ))}
         {calendar.map((week) => week.map((day) => (
           <CalendarDay
-            colorStyles={setDayStyles(day, value, monthlySessions)}
-          >
-            {day.format('D').toString()}
-          </CalendarDay>
+            key={day}
+            day={day}
+            value={value}
+            monthlySessions={monthlySessions}
+          />
         )))}
       </Container>
     );

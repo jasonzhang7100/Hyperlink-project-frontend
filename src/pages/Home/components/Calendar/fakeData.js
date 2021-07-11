@@ -35,11 +35,7 @@ const sessionData = {
   ],
 };
 
-const getSessionData = (month) => {
-  // eslint-disable-next-line no-console
-  console.log(month);
-  return sessionData;
-};
+const getSessionData = () => sessionData;
 
 export default getSessionData;
 

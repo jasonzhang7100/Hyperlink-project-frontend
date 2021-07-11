@@ -31,7 +31,7 @@ const App = () => (
         <Route path="/login" component={Login} />
         <Route path="/admin" component={Admin} />
         <Route path="/mybooking" component={MyBooking} />
-        <Route path="/booking" component={Booking} />
+        <Route path="/booking/:date" component={Booking} />
         <Route path="/" component={Home} />
       </Switch>
     </Layout>
