@@ -5,65 +5,56 @@ import Calendar from './components/Calendar';
 
 const Container = styled.div`
   overflow: hidden;
-  width: 900px;
-  height: 880px;
-  border-radius: 50px;
-  margin: 0 auto;
+  width: 58rem;
+  height: 58rem;
+  border-radius: 4rem;
+  margin: 5rem auto;
   background-color: #fff;
   text-align: center;
 `;
 
 const Title = styled.h1`
-  margin-top: 61px;
-  margin-bottom: 10px;
+  margin-top: 4rem;
+  margin-bottom: 0.7rem;
   color: #171a4f;
   font: bold 36px 'Baloo';
 `;
 
 const Info = styled.div`
-  font: 16px 'Roboto';
+  font: 1rem 'Roboto';
 `;
 
 const Legend = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 80px;
-  height: 100px;
+  margin-left: 6rem;
+  height: 6rem;
 `;
 
 const LegendImg = styled.span`
   display: inline-block;
-  margin: 0 12px 0 70px;
-  width: 19px;
-  height: 19px;
+  margin: 0 1rem 0 4rem;
+  width: 1.2rem;
+  height: 1.2rem;
   background-color: ${({ color }) => color};
 `;
 
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <Container>
-        <Title>Day Pass Availability</Title>
-        <Info>Please click on the date you wish to book</Info>
-        <Legend>
-          <LegendImg color="#bcff2e" />
-          Available
-          <LegendImg color="#ffab2e" />
-          limited
-          <LegendImg color="#ff2e2e" />
-          Fully Booked
-          <LegendImg color="#818181" />
-          Closed
-        </Legend>
-        <Calendar />
-      </Container>
-    );
-  }
-}
+const Home = () => (
+  <Container>
+    <Title>Day Pass Availability</Title>
+    <Info>Please click on the date you wish to book</Info>
+    <Legend>
+      <LegendImg color="#bcff2e" />
+      Available
+      <LegendImg color="#ffab2e" />
+      limited
+      <LegendImg color="#ff2e2e" />
+      Fully Booked
+      <LegendImg color="#818181" />
+      Closed
+    </Legend>
+    <Calendar />
+  </Container>
+);
 
 export default Home;
