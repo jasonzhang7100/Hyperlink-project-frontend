@@ -9,7 +9,7 @@ const Container = styled.div`
   position: relative;
   overflow: hidden;
   width: 100vw;
-  height: 12rem;
+  height: ${({ height }) => height}rem;
   background-color: rgb(24, 28, 77);
   text-align: center;
 `;
@@ -17,8 +17,12 @@ const Container = styled.div`
 const Logo = styled.img`
   position: absolute;
   top: 0.3rem;
-  left: 21rem;
+  left: 10rem;
   width: 10.5rem;
+`;
+
+const OtherLogo = styled.img`
+  width: 6.7rem;
 `;
 
 const HeaderTitle = styled.h1`
@@ -44,7 +48,7 @@ const HeaderButton = styled.button`
 `;
 
 const Header = (props) => (
-  <Container>
+  <Container height={12}>
     <Logo src={LogoImg} alt="Logo" />
     <HeaderTitle>WELCOME TO JAPANESE BATH HOUSE</HeaderTitle>
     <HeaderButton
@@ -64,5 +68,11 @@ Header.propTypes = {
     push: PropTypes.func,
   }).isRequired,
 };
+
+export const OtherHeader = () => (
+  <Container height={7.5}>
+    <OtherLogo src={LogoImg} alt="Logo" />
+  </Container>
+);
 
 export default withRouter(Header);

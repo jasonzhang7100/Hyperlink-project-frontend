@@ -5,7 +5,7 @@ import moment from 'moment';
 import CalendarDay from './components/CalendarDay';
 import buildCalendar from './buildCalendar';
 // 获得固定的假数据
-import getSessionData from './fakeData';
+import getSessionData from '../../../../apis/getSessionData';
 
 const Container = styled.div`
   margin: 0 auto;
