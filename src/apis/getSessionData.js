@@ -1,0 +1,40 @@
+const sessionData = {
+  date: '2021-07',
+  stateArr: [
+    'available',
+    'closed',
+    'limited',
+    'available',
+    'closed',
+    'available',
+    'limited',
+    'closed',
+    'available',
+    'available',
+    'closed',
+    'available',
+    'available',
+    'available',
+    'limited',
+    'closed',
+    'available',
+    'available',
+    'available',
+    'limited',
+    'closed',
+    'fully booked',
+    'closed',
+    'available',
+    'available',
+    'available',
+    'available',
+    'available',
+    'closed',
+    'fully booked',
+    'fully booked',
+  ],
+};
+
+const getSessionData = () => sessionData;
+
+export default getSessionData;
