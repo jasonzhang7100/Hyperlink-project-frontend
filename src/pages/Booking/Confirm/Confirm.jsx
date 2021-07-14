@@ -28,27 +28,24 @@ const Line = styled.div`
   background-color: #c7c7c7;
 `;
 
-const Confirm = ({ paid }) =>
-  paid === true ? (
-    <Container>
-      <FontAwesomeIcon color="#181b50" size="4x" icon={faCheckCircle} />
-      <Title className="title">Booking Confirmed</Title>
-      <ConfirmedMessage>
-        Thank you John, we&apos;re looking forward to see you soon!
-        <br />
-        Confirmation email send to &nbsp;
-        <a href="www.gmail.com">xxx@gmail.com</a>
-      </ConfirmedMessage>
+const Confirm = () => (
+  <Container>
+    <FontAwesomeIcon color="#181b50" size="4x" icon={faCheckCircle} />
+    <Title className="title">Booking Confirmed</Title>
+    <ConfirmedMessage>
+      Thank you John, we&apos;re looking forward to see you soon!
+      <br />
+      Confirmation email send to &nbsp;
+      <a href="www.gmail.com">xxx@gmail.com</a>
+    </ConfirmedMessage>
 
-      <Line />
+    <Line />
 
-      <BookingInfo date="2021-07-06" id="#12345" guestAmount={1} />
+    <BookingInfo date="2021-07-06" id="#12345" guestAmount={1} />
 
-      <Line />
-    </Container>
-  ) : (
-    <div>付款失败</div>
-  );
+    <Line />
+  </Container>
+);
 
 // 加个按钮。如果付款成功，点击按钮发送formDAta给后端
 
