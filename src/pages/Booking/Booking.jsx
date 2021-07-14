@@ -32,8 +32,6 @@ const ProgressCircle = styled.div`
   line-height: 4rem;
 `;
 
-const ButtonBar = styled.div``;
-
 const GoBackButton = styled.button`
   width: 6.5rem;
   height: 2rem;
@@ -45,26 +43,26 @@ const GoBackButton = styled.button`
   }
 `;
 
-const StepButton = styled.button`
-  width: 6.5rem;
-  height: 2rem;
-  border: none;
-  border-radius: 0.2rem;
-  background-color: rgb(24, 28, 77);
-  color: #fff;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 class Booking extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       step: 1,
+      formData: {},
+      paid: false,
     };
     this.handleNextStep = this.handleNextStep.bind(this);
     this.handlePreStep = this.handlePreStep.bind(this);
+    this.handleFormData = this.handleFormData.bind(this);
+    this.handlePaidStatus = this.handlePaidStatus.bind(this);
+  }
+
+  handleFormData(formData) {
+    this.setState({ formData });
+  }
+
+  handlePaidStatus() {
+    this.setState({ paid: true });
   }
 
   handleNextStep() {
@@ -83,27 +81,39 @@ class Booking extends React.Component {
   }
 
   render() {
-    const { step } = this.state;
+    const { step, formData, paid } = this.state;
     const { match } = this.props;
     const { date } = match.params;
     return (
       <Container>
         <ProgressBar>
           {[1, 2, 3].map((num) => (
-            <ProgressCircle key={num} step={step}>{num}</ProgressCircle>
+            <ProgressCircle key={num} step={step}>
+              {num}
+            </ProgressCircle>
           ))}
         </ProgressBar>
-        {step === 1 && <Form date={date} />}
-        {step === 2 && <Payment />}
-        {step === 3 && <Confirm />}
-        <ButtonBar>
-          <GoBackButton onClick={this.handlePreStep}>
-            {'<'}
-            {' '}
-            go back
-          </GoBackButton>
-          <StepButton onClick={this.handleNextStep}>CONTINUE</StepButton>
-        </ButtonBar>
+        {step === 1 && (
+          <Form
+            date={date}
+            formData={formData}
+            handleNextStep={this.handleNextStep}
+            handleFormData={this.handleFormData}
+          />
+        )}
+        {step === 2 && (
+          <Payment
+            price={formData.price || 0}
+            handlePaidStatus={this.handlePaidStatus}
+            handleNextStep={this.handleNextStep}
+          />
+        )}
+        {step === 3 && <Confirm paid={paid} formData={formData} />}
+        <GoBackButton onClick={this.handlePreStep}>
+          {'<'}
+          {' '}
+          go back
+        </GoBackButton>
       </Container>
     );
   }
