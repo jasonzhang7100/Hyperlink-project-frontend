@@ -149,7 +149,7 @@ class Form extends React.Component {
   }
 
   handleContinueClick = (data, hasError) => {
-    const { handleFormData, handleNextStep} = this.props;
+    const { handleFormData, handleNextStep } = this.props;
     const formData = Object.entries(data).map(([key, value]) => ({
       [key]: value.value,
     }));
