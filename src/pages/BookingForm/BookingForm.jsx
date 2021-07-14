@@ -1,6 +1,9 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import Input from '../../components/Input';
+import FormItem from '../../components/FormItem';
+import validate from './validate';
+import ErrorMsg from '../../components/ErrorMsg';
 
 const Title = styled.h2`
   font-family: 'Roboto';
@@ -32,18 +35,9 @@ const Form = styled.form`
   align-items: center;
 `;
 
-const FormItem = styled.div`
-  font-family: 'Roboto';
-  display: flex;
-  flex-direction: column;
-`;
 const ItemContainer = styled.div`
   display: flex;
   flex-direction: row;
-`;
-
-const Label = styled.label`
-  margin: 0 0 5px 5px;
 `;
 
 const Checkbox = styled.div`
@@ -51,46 +45,115 @@ const Checkbox = styled.div`
   text-align: left;
 `;
 
-const CheckItem = styled.div`
-  margin-bottom: 5px;
-`;
-
+const initialData = {
+  value: '',
+  blurred: false,
+  touched: false,
+  focused: false,
+};
 class BookingForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       data: {
-        selectedDate: '',
-        guestNumber: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-        birthDate: '',
-        ageChecked: false,
-        towelChecked: false,
-        acknowledgeChecked: false,
+        selectedDate: initialData,
+        guestNumber: initialData,
+        firstName: initialData,
+        lastName: initialData,
+        email: initialData,
+        phoneNumber: initialData,
+        birthDate: initialData,
+        towelChecked: {
+          value: false,
+        },
       },
+      isFormSubmit: false,
     };
 
     this.handleDataChange = this.handleDataChange.bind(this);
+    this.handleIsFormSubmitChange = this.handleIsFormSubmitChange.bind(this);
+    this.handleBlurredChange = this.handleBlurredChange.bind(this);
+    this.handleFocusedChange = this.handleFocusedChange.bind(this);
   }
 
   handleDataChange(event) {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     const { name } = event.target;
 
+    this.setData(name, {
+      value,
+      touched: true,
+    });
+  }
+
+  handleIsFormSubmitChange(newIsFormSubmit) {
+    this.setState({
+      isFormSubmit: newIsFormSubmit,
+    });
+  }
+
+  handleFocusedChange(event) {
+    const { name } = event.target;
+
+    this.setData(name, {
+      focused: true,
+    });
+  }
+
+  handleBlurredChange(event) {
+    const { name } = event.target;
+
+    this.setData(name, {
+      blurred: true,
+      focused: false,
+    });
+  }
+
+  setData(name, newData) {
     this.setState((prevState) => ({
       data: {
         ...prevState.data,
-        [name]: value,
+        [name]: {
+          ...prevState.data[name],
+          ...newData,
+        },
       },
     }));
   }
 
+  getErrorMessage(error, name) {
+    const { data, isFormSubmit } = this.state;
+
+    const showInputError = data[name].blurred;
+
+    return (showInputError || isFormSubmit) && error[name];
+  }
+
+  getError() {
+    const { data } = this.state;
+
+    const error = {};
+
+    Object.keys(data).forEach((name) => {
+      const errorOfName = validate(name, data);
+
+      if (!errorOfName) {
+        return;
+      }
+
+      error[name] = errorOfName;
+    });
+
+    return error;
+  }
+
   render() {
     const { data } = this.state;
+
+    const error = this.getError(data);
+
+    // const hasError = Object.keys(error).length > 0;
 
     return (
       <>
@@ -99,134 +162,127 @@ class BookingForm extends React.Component {
         <Form
           onSubmit={(e) => {
             e.preventDefault();
+
+            this.handleIsFormSubmitChange(true);
+
+            // if (hasError) {
+            //   return;
+            // }
             // console.log(data);
           }}
         >
           <ItemContainer>
-            <FormItem>
-              <Label htmlFor="selectedDate">Date</Label>
+            <FormItem label="Date" htmlFor="selectedDate">
               <Input
                 variant="sm"
                 name="selectedDate"
                 id="selectedDate"
                 placeholder="06/06/2021"
                 type="text"
-                value={data.selectedDate}
+                value={data.selectedDate.value}
                 disabled
               />
             </FormItem>
-            <FormItem>
-              <Label htmlFor="guestNumber">Number of guests</Label>
+            <FormItem label="Number of guests" htmlFor="guestNumber">
               <Input
                 variant="sm"
                 name="guestNumber"
                 id="guestNumber"
-                placeholder="1"
-                value={data.guestNumber}
+                value={data.guestNumber.value}
                 type="number"
                 onChange={this.handleDataChange}
+                onFocus={this.handleFocusedChange}
+                onBlur={this.handleBlurredChange}
+                error={this.getErrorMessage(error, 'guestNumber')}
               />
+              <ErrorMsg>{this.getErrorMessage(error, 'guestNumber')}</ErrorMsg>
             </FormItem>
           </ItemContainer>
           <ItemContainer>
-            <FormItem>
-              <Label htmlFor="firstName">First Name</Label>
+            <FormItem label="First Name" htmlFor="firstName">
               <Input
                 variant="sm"
                 name="firstName"
                 id="firstName"
-                placeholder="John"
                 type="text"
-                value={data.firstName}
+                value={data.firstName.value}
                 onChange={this.handleDataChange}
+                onFocus={this.handleFocusedChange}
+                onBlur={this.handleBlurredChange}
+                error={this.getErrorMessage(error, 'firstName')}
               />
+              <ErrorMsg>{this.getErrorMessage(error, 'firstName')}</ErrorMsg>
             </FormItem>
-            <FormItem>
-              <Label htmlFor="lastName">Last Name</Label>
+            <FormItem label="Last Name" htmlFor="lastName">
               <Input
                 variant="sm"
                 name="lastName"
                 id="lastName"
-                placeholder="Mayer"
                 type="text"
-                value={data.lastName}
+                value={data.lastName.value}
                 onChange={this.handleDataChange}
+                onFocus={this.handleFocusedChange}
+                onBlur={this.handleBlurredChange}
+                error={this.getErrorMessage(error, 'lastName')}
               />
+              <ErrorMsg>{this.getErrorMessage(error, 'lastName')}</ErrorMsg>
             </FormItem>
           </ItemContainer>
-          <FormItem>
-            <Label htmlFor="email">Email</Label>
+          <FormItem label="Email" htmlFor="email">
             <Input
               variant="lg"
               name="email"
               id="email"
-              placeholder="johnmayer19@gmail.com"
               type="email"
-              value={data.email}
+              value={data.email.value}
               onChange={this.handleDataChange}
+              onFocus={this.handleFocusedChange}
+              onBlur={this.handleBlurredChange}
+              error={this.getErrorMessage(error, 'email')}
             />
+            <ErrorMsg>{this.getErrorMessage(error, 'email')}</ErrorMsg>
           </FormItem>
-          <FormItem>
-            <Label htmlFor="phoneNumber">Phone number</Label>
+          <FormItem label="Phone number" htmlFor="phoneNumber">
             <Input
               variant="lg"
               name="phoneNumber"
               id="phoneNumber"
-              placeholder="0412345678"
-              type="number"
-              value={data.phoneNumber}
+              type="text"
+              value={data.phoneNumber.value}
               onChange={this.handleDataChange}
+              onFocus={this.handleFocusedChange}
+              onBlur={this.handleBlurredChange}
+              error={this.getErrorMessage(error, 'phoneNumber')}
             />
+            <ErrorMsg>{this.getErrorMessage(error, 'phoneNumber')}</ErrorMsg>
           </FormItem>
-          <FormItem>
-            <Label htmlFor="birthDate">Date of birth</Label>
+          <FormItem label="Date of birth" htmlFor="birthDate">
             <Input
               variant="lg"
               name="birthDate"
               id="birthDate"
               type="date"
-              value={data.birthDate}
+              value={data.birthDate.value}
               onChange={this.handleDataChange}
+              onFocus={this.handleFocusedChange}
+              onBlur={this.handleBlurredChange}
+              error={this.getErrorMessage(error, 'birthDate')}
             />
+            <ErrorMsg>{this.getErrorMessage(error, 'birthDate')}</ErrorMsg>
           </FormItem>
-          <Title variant="secondary">Please read and select all before the payment</Title>
+          <Title variant="secondary">Please read and select before the payment</Title>
           <Checkbox>
-            <CheckItem>
-              <input
-                name="ageChecked"
-                type="checkbox"
-                id="ageChecked"
-                checked={data.ageChecked}
-                onChange={this.handleDataChange}
-              />
-              <Label htmlFor="ageChecked">
-                All guest in my booking are over 15 years of age
-              </Label>
-            </CheckItem>
-            <CheckItem>
+            <label htmlFor="towelChecked">
               <input
                 name="towelChecked"
                 type="checkbox"
                 id="towelChecked"
-                checked={data.towelChecked}
+                checked={data.towelChecked.value}
                 onChange={this.handleDataChange}
               />
-              <Label htmlFor="towelChecked">
-                I will either bring my own large bath towel or purchase one on the day
-              </Label>
-            </CheckItem>
-            <CheckItem>
-              <input
-                name="acknowledgeChecked"
-                type="checkbox"
-                id="acknowledgeChecked"
-                checked={data.acknowledgeChecked}
-                onChange={this.handleDataChange}
-              />
-              <Label htmlFor="acknowledgeChecked">
-                I understand this is a booking enquiry and not confirmation of booking
-              </Label>
-            </CheckItem>
+              I will either bring my own large bath towel or purchase one on the day
+            </label>
+            <ErrorMsg>{this.getErrorMessage(error, 'towelChecked')}</ErrorMsg>
           </Checkbox>
         </Form>
       </>
