@@ -30,7 +30,7 @@ const validate = (name, data) => {
         return 'Please input your first name';
       }
       if (!NAME_REGEXP.test(value)) {
-        return 'English alphabets only';
+        return 'Please input English alphabets only';
       }
       return '';
     }
@@ -40,7 +40,7 @@ const validate = (name, data) => {
         return 'Please input your last name';
       }
       if (!NAME_REGEXP.test(value)) {
-        return 'English alphabets only';
+        return 'Please input English alphabets only';
       }
       return '';
     }

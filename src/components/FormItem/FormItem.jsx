@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const Label = styled.label`
   margin: 0 0 5px 5px;
@@ -25,9 +25,9 @@ const FormItem = ({
 );
 
 FormItem.propTypes = {
-  label: propTypes.string.isRequired,
-  htmlFor: propTypes.string.isRequired,
-  children: propTypes.node.isRequired,
+  label: PropTypes.string.isRequired,
+  htmlFor: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default FormItem;

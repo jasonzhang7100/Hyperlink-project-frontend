@@ -1,52 +1,12 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Input from '../Input';
 import FormItem from '../FormItem';
 import validate from './validate';
 import ErrorMsg from '../ErrorMsg';
+import ButtonContinue from '../ButtonContinue';
 
-const StepButton = styled.button`
-  width: 6.5rem;
-  height: 2rem;
-  border: none;
-  border-radius: 0.2rem;
-  background-color: rgb(24, 28, 77);
-  color: #fff;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-// const Form = ({ date, handleFormData, handleNextStep }) => {
-//   const formData = {
-//     // 这个数据应该从input获得，这里先写死了
-//     name: 'jason',
-//     mobile: 123456,
-//     booking: '至尊套餐',
-//     // 价格应该是从booking套餐推出来的，或者推出价格的逻辑写在父级
-//     price: 200,
-//   };
-
-//   const handleClick = () => {
-//     handleFormData(formData);
-//     handleNextStep();
-//   };
-
-//   return (
-//     <>
-//       这是从calendar传过来的时间（如果你要用到）:
-//       {date}
-//       <input placeholder="输入名字" />
-//       <input placeholder="输入电话" />
-//       <StepButton onClick={handleClick}>CONTINUE</StepButton>
-//     </>
-//   );
-// };
-
-
-
-// chen from here
 const Title = styled.h2`
   font-family: 'Roboto';
   text-align: center;
@@ -110,6 +70,9 @@ class Form extends React.Component {
         towelChecked: {
           value: false,
         },
+        price: {
+          value: 200,
+        },
       },
       isFormSubmit: false,
     };
@@ -118,6 +81,7 @@ class Form extends React.Component {
     this.handleIsFormSubmitChange = this.handleIsFormSubmitChange.bind(this);
     this.handleBlurredChange = this.handleBlurredChange.bind(this);
     this.handleFocusedChange = this.handleFocusedChange.bind(this);
+    this.handleContinueClick = this.handleContinueClick.bind(this);
   }
 
   handleDataChange(event) {
@@ -184,6 +148,17 @@ class Form extends React.Component {
     return error;
   }
 
+  handleContinueClick = (data, hasError) => {
+    const { handleFormData, handleNextStep} = this.props;
+    const formData = Object.entries(data).map(([key, value]) => ({
+      [key]: value.value,
+    }));
+    if (!hasError) {
+      handleFormData(formData);
+      handleNextStep();
+    }
+  };
+
   render() {
     const { data } = this.state;
     const { date } = this.props;
@@ -196,11 +171,9 @@ class Form extends React.Component {
         <SubTitle>You can manage your booking with your details below.</SubTitle>
         <FormWrapper
           onSubmit={(e) => {
-            if (!hasError) {
-              e.preventDefault();
-              this.handleIsFormSubmitChange(true);
-            }
-            // console.log(data);
+            e.preventDefault();
+            this.handleIsFormSubmitChange(true);
+            this.handleContinueClick(data, hasError);
           }}
         >
           <ItemContainer>
@@ -316,6 +289,7 @@ class Form extends React.Component {
             </label>
             <ErrorMsg>{this.getErrorMessage(error, 'towelChecked')}</ErrorMsg>
           </Checkbox>
+          <ButtonContinue>CONTINUE</ButtonContinue>
         </FormWrapper>
       </>
     );
