@@ -10,7 +10,7 @@ const Item = styled.div`
   font-family: 'Roboto';
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 `;
 
 const FormItem = ({
