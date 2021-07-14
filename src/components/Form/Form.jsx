@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const StepButton = styled.button`
   width: 6.5rem;
@@ -37,6 +38,12 @@ const Form = ({ date, handleFormData, handleNextStep }) => {
       <StepButton onClick={handleClick}>CONTINUE</StepButton>
     </>
   );
+};
+
+Form.propTypes = {
+  date: PropTypes.string.isRequired,
+  handleFormData: PropTypes.func.isRequired,
+  handleNextStep: PropTypes.func.isRequired,
 };
 
 export default Form;
