@@ -1,10 +1,10 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import propTypes from 'prop-types';
 import Input from '../Input';
 import FormItem from '../FormItem';
 import validate from './validate';
 import ErrorMsg from '../ErrorMsg';
-import propTypes from 'prop-types';
 
 const StepButton = styled.button`
   width: 6.5rem;
