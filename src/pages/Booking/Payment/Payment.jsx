@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
@@ -21,11 +22,6 @@ const PUBLIC_KEY =
 const stripeTestPromise = loadStripe(PUBLIC_KEY);
 
 const Payment = ({ price, email, handlePaidStatus, handleNextStep }) => (
-  // const handleClick = () => {
-  //   handlePaidStatus();
-  //   handleNextStep();
-  // };
-
   <PaymentContainer>
     <PaymentTitle>Payment</PaymentTitle>
     <div>We will secure your spot once we receive your payment.</div>
@@ -41,13 +37,7 @@ const Payment = ({ price, email, handlePaidStatus, handleNextStep }) => (
     </Elements>
   </PaymentContainer>
 );
-// return (
-//   <>
-//     显示要付的金额
-//     {price}
-//     <StepButton onClick={handleClick}>PLACE ORDER</StepButton>
-//   </>
-// );
+
 Payment.propTypes = {
   price: PropTypes.number.isRequired,
   email: PropTypes.string.isRequired,
