@@ -12,13 +12,22 @@ const Container = styled.div`
   height: ${({ height }) => height}rem;
   background-color: rgb(24, 28, 77);
   text-align: center;
+  @media(max-width:768px){
+    height:${({ height }) => (height + 2)}rem;
+  }
 `;
 
 const Logo = styled.img`
   position: absolute;
   top: 0.3rem;
-  left: 10rem;
-  width: 10.5rem;
+  left: 8%;
+  width:10.5rem;
+  @media (max-width: 992px) {
+    left:40%;
+  }
+  @media(max-width:414px){
+    left:28%;
+  }
 `;
 
 const OtherLogo = styled.img`
@@ -30,12 +39,15 @@ const HeaderTitle = styled.h1`
   color: #fff;
   font: bold 1.8rem 'Baloo';
   letter-spacing: 0.1rem;
+  @media (max-width: 992px) {
+    display:none;
+  }
 `;
 
 const HeaderButton = styled.button`
   position: absolute;
   bottom: 1rem;
-  right: 23rem;
+  right: 5%;
   border: none;
   background-color: rgb(24, 28, 77);
   color: #fff;
