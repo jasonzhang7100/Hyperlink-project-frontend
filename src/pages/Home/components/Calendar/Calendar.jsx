@@ -4,7 +4,6 @@ import moment from 'moment';
 
 import CalendarDay from './components/CalendarDay';
 import buildCalendar from './buildCalendar';
-// 获得固定的假数据
 import getSessionData from '../../../../apis/getSessionData';
 
 const Container = styled.div`
@@ -53,46 +52,35 @@ class Calendar extends React.Component {
       calendar: [],
       monthlySessions: [],
     };
-    this.handleLeftClick = this.handleLeftClick.bind(this);
-    this.handleRightClick = this.handleRightClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.setMonthlySessions = this.setMonthlySessions.bind(this);
   }
 
   componentDidMount() {
     const { value } = this.state;
+    this.setMonthlySessions(value);
     this.setState({
       calendar: buildCalendar(value),
-      monthlySessions: this.setMonthlySessions(value),
     });
   }
 
-  handleLeftClick() {
+  async handleClick(direction) {
     const { value } = this.state;
-    const preMonth = value.clone().subtract(1, 'month');
-    const preCalendar = buildCalendar(preMonth);
+    const preOrNextMonth = direction === 'left'
+      ? value.clone().subtract(1, 'month')
+      : value.clone().add(1, 'month');
+    const preOrNextCalendar = buildCalendar(preOrNextMonth);
+    // 为什么这里加await，因为setMonthlySessions方法中对monthlySessions状态的改变是异步的，若慢于下面calendar的变动会导致日期延迟变色
+    await this.setMonthlySessions(preOrNextMonth);
     this.setState({
-      value: preMonth,
-      calendar: preCalendar,
-      monthlySessions: this.setMonthlySessions(preMonth),
+      value: preOrNextMonth,
+      calendar: preOrNextCalendar,
     });
   }
 
-  handleRightClick() {
-    const { value } = this.state;
-    const nextMonth = value.clone().add(1, 'month');
-    const nextCalendar = buildCalendar(nextMonth);
-    this.setState({
-      value: nextMonth,
-      calendar: nextCalendar,
-      monthlySessions: this.setMonthlySessions(nextMonth),
-    });
-  }
-
-  setMonthlySessions(monthValue) {
-    const { monthlySessions } = this.state;
-    const { stateArr } = getSessionData(monthValue.format('M'));
-    monthlySessions.push(...stateArr);
-    return monthlySessions;
+  async setMonthlySessions(monthValue) {
+    const { stateArr } = await getSessionData(monthValue);
+    this.setState({ monthlySessions: stateArr });
   }
 
   render() {
@@ -100,9 +88,21 @@ class Calendar extends React.Component {
     return (
       <Container>
         <CalendarHeader>
-          <CalendarButton onClick={this.handleLeftClick}>{'<'}</CalendarButton>
+          <CalendarButton
+            onClick={() => {
+              this.handleClick('left');
+            }}
+          >
+            {'<'}
+          </CalendarButton>
           {value.clone().format('MMMM YYYY')}
-          <CalendarButton onClick={this.handleRightClick}>{'>'}</CalendarButton>
+          <CalendarButton
+            onClick={() => {
+              this.handleClick('right');
+            }}
+          >
+            {'>'}
+          </CalendarButton>
         </CalendarHeader>
         {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((weekday) => (
           <CalendarWeekday key={weekday}>{weekday}</CalendarWeekday>
