@@ -25,7 +25,6 @@ const DayItem = styled.span`
 const CalendarDay = ({
   day, value, monthlySessions, history,
 }) => {
-  console.log(monthlySessions)
   const colorStyles = setDayStyles(day, value, monthlySessions);
   const handleDayClick = (date, style) => {
     if (style.bgColor === '#bcff2e' || style.bgColor === '#ffab2e') {
