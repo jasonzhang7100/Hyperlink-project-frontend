@@ -9,9 +9,8 @@ import Confirm from './Confirm';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #fff;
 `;
 
@@ -88,13 +87,8 @@ class Booking extends React.Component {
     const { date } = match.params;
     return (
       <Container>
-        <ProgressBar>
-          {[1, 2, 3].map((num) => (
-            <ProgressCircle key={num} step={step}>
-              {num}
-            </ProgressCircle>
-          ))}
-        </ProgressBar>
+        <ProgressionBar step={step} />
+
         {step === 1 && (
           <Form
             date={date}
