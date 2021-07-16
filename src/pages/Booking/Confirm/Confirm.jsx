@@ -1,8 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-regular-svg-icons";
+import BookingInfo from "../../../components/BookingInfo";
 
 const Container = styled.div`
   text-align: center;
@@ -27,8 +28,8 @@ const Line = styled.div`
   background-color: #c7c7c7;
 `;
 
-const Confirm = ({ paid, formData }) => (paid === true
-  ? (
+const Confirm = ({ paid }) =>
+  paid === true ? (
     <Container>
       <FontAwesomeIcon color="#181b50" size="4x" icon={faCheckCircle} />
       <Title className="title">Booking Confirmed</Title>
@@ -40,11 +41,14 @@ const Confirm = ({ paid, formData }) => (paid === true
       </ConfirmedMessage>
 
       <Line />
-      {formData.name}
+
+      <BookingInfo date="2021-07-06" id="#12345" guestAmount={1} />
+
       <Line />
     </Container>
-  ) : (<div>付款失败</div>)
-);
+  ) : (
+    <div>付款失败</div>
+  );
 
 // 加个按钮。如果付款成功，点击按钮发送formDAta给后端
 
