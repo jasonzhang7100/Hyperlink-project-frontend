@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const Container = styled.div`
   width: 29rem;
-  margin: 0 auto;
+  margin: 5rem auto 6rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
