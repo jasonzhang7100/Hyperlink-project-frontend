@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Input from '../Input';
@@ -113,7 +113,7 @@ class Form extends React.Component {
     });
 
     if (!hasError) {
-      // axios.post(``, { 
+      // axios.post(``, {
       //   bookingDate: date,
       //   numOfGuests: guestNumber.value,
       //   firstName: firstName.value,

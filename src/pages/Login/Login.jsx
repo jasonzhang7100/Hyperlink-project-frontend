@@ -56,9 +56,8 @@ const LoginButton = styled.div`
 //     </Container>
 //   </>
 // );
-
-class Login extends React.Component{
-    constructor(props) {
+class Login extends React.Component {
+  constructor(props) {
     super(props);
 
     this.state = {
