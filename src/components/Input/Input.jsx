@@ -6,16 +6,19 @@ const Input = styled.input`
   background-color: rgba(196, 196, 196, 0.23);
   height: 35px;
   padding: 0 15px;
-  margin: 0px 10px 0px 0px;
   
   ${(props) => ({
-    sm: css`
+    smLeft: css`
+      width: 170px;
+      margin-right: 10px;
+    `,
+    smRight: css`
       width: 170px;
     `,
     lg: css`
       width: 350px;
     `,
-  }[props.variant])}
+  }[props.size])}
 
   ${(props) => props.error && css`
     background-color: rgba(255, 0, 0, 0.05);
