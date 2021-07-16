@@ -1,10 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-import Form from '../../components/Form';
-import Payment from './Payment';
-import Confirm from './Confirm';
+import Form from "../../components/Form";
+import Payment from "./Payment";
+import Confirm from "./Confirm";
+import ProgressionBar from "./ProgressionBar";
 
 const Container = styled.div`
   display: flex;
@@ -77,7 +78,7 @@ class Booking extends React.Component {
     if (step > 1) {
       this.setState({ step: step - 1 });
     } else {
-      history.push('/');
+      history.push("/");
     }
   }
 
