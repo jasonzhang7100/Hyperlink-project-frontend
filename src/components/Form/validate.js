@@ -56,8 +56,16 @@ const validate = (name, data) => {
     }
 
     case 'birthDate': {
+      const currentYear = new Date().getFullYear();
+      const birthDate = value.split('-');
+      const birthYear = birthDate[0];
+
       if (!value) {
         return 'Please enter your date of birth';
+      }
+
+      if (currentYear - birthYear < 18) {
+        return 'Please make sure you are over 18 years of age';
       }
       return '';
     }
@@ -65,6 +73,13 @@ const validate = (name, data) => {
     case 'towelChecked': {
       if (value === false) {
         return 'Please read and tick the box';
+      }
+      return '';
+    }
+
+    case 'password': {
+      if (!value) {
+        return 'Please enter your password';
       }
       return '';
     }

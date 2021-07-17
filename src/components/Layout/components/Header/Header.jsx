@@ -37,7 +37,7 @@ const OtherLogo = styled.img`
 const HeaderTitle = styled.h1`
   margin-top: 5rem;
   color: #fff;
-  font: bold 1.8rem 'Baloo';
+  font: bold 2.1rem 'Baloo';
   letter-spacing: 0.1rem;
   @media (max-width: 992px) {
     display:none;

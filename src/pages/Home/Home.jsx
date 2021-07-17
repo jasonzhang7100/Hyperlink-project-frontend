@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import Calendar from './components/Calendar';
 
 const Container = styled.div`
@@ -25,6 +24,7 @@ const Info = styled.div`
 `;
 
 const Legend = styled.div`
+  font-family: 'Roboto';
   display: flex;
   align-items: center;
   margin-left: 6rem;

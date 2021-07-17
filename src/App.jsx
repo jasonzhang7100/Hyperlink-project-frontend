@@ -9,7 +9,8 @@ import Booking from './pages/Booking';
 import MyBooking from './pages/MyBooking';
 import Roboto from './assets/fonts/Roboto/Roboto-Regular.ttf';
 import Raleway from './assets/fonts/Raleway/Raleway-VariableFont_wght.ttf';
-import EditBooking from './pages/EditBooking'
+import Baloo from './assets/fonts/Baloo/Baloo2-Bold.ttf';
+import EditBooking from './pages/EditBooking';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -20,6 +21,11 @@ const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'Raleway';
     src: url(${Raleway}) format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Baloo';
+    src: url(${Baloo}) format('truetype');
   }
 
   body {
