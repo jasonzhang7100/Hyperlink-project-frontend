@@ -5,33 +5,14 @@ import styled from 'styled-components';
 import Form from '../../components/Form';
 import Payment from './Payment';
 import Confirm from './Confirm';
+import ProgressionBar from './ProgressionBar';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #fff;
-`;
-
-const ProgressBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const ProgressCircle = styled.div`
-  width: 4rem;
-  height: 4rem;
-  margin: 0 4rem;
-  border: solid 1px rgb(24, 28, 77);
-  border-radius: 50%;
-  background-color: ${({ step, children }) =>
-    step >= children ? 'rgb(24, 28, 77)' : ''};
-  color: ${({ step, children }) =>
-    step >= children ? '#fff' : 'rgb(24, 28, 77)'};
-  text-align: center;
-  line-height: 4rem;
 `;
 
 const GoBackButton = styled.button`
@@ -88,13 +69,8 @@ class Booking extends React.Component {
     const { date } = match.params;
     return (
       <Container>
-        <ProgressBar>
-          {[1, 2, 3].map((num) => (
-            <ProgressCircle key={num} step={step}>
-              {num}
-            </ProgressCircle>
-          ))}
-        </ProgressBar>
+        <ProgressionBar step={step} />
+
         {step === 1 && (
           <Form
             date={date}
@@ -112,7 +88,11 @@ class Booking extends React.Component {
           />
         )}
         {step === 3 && <Confirm paid={paid} formData={formData} />}
-        <GoBackButton onClick={this.handlePreStep}>{'<'} go back</GoBackButton>
+        <GoBackButton onClick={this.handlePreStep}>
+          {'<'}
+          {' '}
+          go back
+        </GoBackButton>
       </Container>
     );
   }

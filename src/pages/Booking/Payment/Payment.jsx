@@ -16,12 +16,13 @@ const PaymentTitle = styled.div`
   font-size: 1.5rem;
 `;
 
-const PUBLIC_KEY =
-  'pk_test_51JAT9YC8FjBDUp9B7ovNxTZYvGyOeuWnLvddN3VrH0I5sfleL0eATlWon3tn1i4MfeSHrpVS02wrqKArGD8FgQny00DW4yXprq';
+const PUBLIC_KEY = 'pk_test_51JAT9YC8FjBDUp9B7ovNxTZYvGyOeuWnLvddN3VrH0I5sfleL0eATlWon3tn1i4MfeSHrpVS02wrqKArGD8FgQny00DW4yXprq';
 
 const stripeTestPromise = loadStripe(PUBLIC_KEY);
 
-const Payment = ({ price, email, handlePaidStatus, handleNextStep }) => (
+const Payment = ({
+  price, email, handlePaidStatus, handleNextStep,
+}) => (
   <PaymentContainer>
     <PaymentTitle>Payment</PaymentTitle>
     <div>We will secure your spot once we receive your payment.</div>
