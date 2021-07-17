@@ -26,8 +26,10 @@ const ProgressCircle = styled.div`
   margin: 0 4rem;
   border: solid 1px rgb(24, 28, 77);
   border-radius: 50%;
-  background-color: ${({ step, children }) => (step >= children ? 'rgb(24, 28, 77)' : '')};
-  color: ${({ step, children }) => (step >= children ? '#fff' : 'rgb(24, 28, 77)')};
+  background-color: ${({ step, children }) =>
+    step >= children ? 'rgb(24, 28, 77)' : ''};
+  color: ${({ step, children }) =>
+    step >= children ? '#fff' : 'rgb(24, 28, 77)'};
   text-align: center;
   line-height: 4rem;
 `;
@@ -104,16 +106,13 @@ class Booking extends React.Component {
         {step === 2 && (
           <Payment
             price={formData.price || 0}
+            email={formData.email || 'customer@example.com'}
             handlePaidStatus={this.handlePaidStatus}
             handleNextStep={this.handleNextStep}
           />
         )}
         {step === 3 && <Confirm paid={paid} formData={formData} />}
-        <GoBackButton onClick={this.handlePreStep}>
-          {'<'}
-          {' '}
-          go back
-        </GoBackButton>
+        <GoBackButton onClick={this.handlePreStep}>{'<'} go back</GoBackButton>
       </Container>
     );
   }
