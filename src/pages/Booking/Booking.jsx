@@ -15,23 +15,6 @@ const Container = styled.div`
   background-color: #fff;
 `;
 
-const ProgressBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const ProgressCircle = styled.div`
-  width: 4rem;
-  height: 4rem;
-  margin: 0 4rem;
-  border: solid 1px rgb(24, 28, 77);
-  border-radius: 50%;
-  background-color: ${({ step, children }) => (step >= children ? 'rgb(24, 28, 77)' : '')};
-  color: ${({ step, children }) => (step >= children ? '#fff' : 'rgb(24, 28, 77)')};
-  text-align: center;
-  line-height: 4rem;
-`;
-
 const GoBackButton = styled.button`
   width: 6.5rem;
   height: 2rem;
