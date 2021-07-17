@@ -11,51 +11,14 @@ import FormSubTitle from '../../components/FormSubTitle';
 import FormWrapper from '../../components/FormWrapper';
 
 const Container = styled.div`
-  margin: 0 auto;
-  text-align: center;
-  width: 580px;
-  height: 400px;
-  margin-left: 600px;
-  margin-top: 215px;
-  background: #FFFFFF;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-  border-radius: 50px;
-
-`;
-const Container = styled.div`
   background-color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
   display: inline-block;
   border-radius: 20px;
   padding: 3rem 10rem;
+  margin: 0 auto;
 `;
 
-const LoginButton = styled.div`
-  margin:0;
-  text-align: center;
-  background: #181B50;
-  height:50px;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  white-space: nowrap;
-  text-decoration:none;
-  margin-top:150px;
-`;
-
-// const Login = () => (
-//   <>
-//     <Container>
-
-//         <LoginButton>
-//           <Link to="/mybooking" style={{ textDecoration: 'none' ,color:'white'}}>Search</Link>
-//         </LoginButton>
-//     </Container>
-//   </>
-// );
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -175,11 +138,9 @@ class Login extends React.Component {
               />
               <ErrorMsg>{this.getErrorMessage(error, 'password')}</ErrorMsg>
             </FormItem>
-
-            <ButtonContinue>LOGIN</ButtonContinue>
-            <LoginButton>
-              <Link to="/mybooking" style={{ textDecoration: 'none' ,color:'white'}}>Search</Link>
-            </LoginButton>
+            <Link to="/mybooking">
+              <ButtonContinue>LOGIN</ButtonContinue>
+            </Link>
           </FormWrapper>
         </Container>
       </>

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -15,6 +15,7 @@ const Container = styled.div`
   width: 500px;
   margin-left: 50px;
   margin-top: 1rem;
+  font-family: 'Roboto';
 `;
 
 const BookingDate = styled.div`
@@ -70,8 +71,6 @@ const EditButton = styled.div`
   margin: 8px 0px;
 `;
 
-
-
 const BookingId = styled.span``;
 const BookingType = styled.span``;
 const GuestAmount = styled.span``;
@@ -117,7 +116,7 @@ const BookingInfo = ({ date, id, guestAmount }) => {
         </BookingDetails>
       </BookingContent>
       <EditButton>
-        <Link to="/editbooking" style={{ textDecoration: 'none' ,color:'white'}}>Edit</Link>
+        <Link to="/editbooking" style={{ textDecoration: 'none', color: 'white' }}>Edit</Link>
       </EditButton>
     </Container>
   );

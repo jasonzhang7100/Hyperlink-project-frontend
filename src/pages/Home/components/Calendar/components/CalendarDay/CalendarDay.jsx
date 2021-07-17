@@ -15,7 +15,7 @@ const DayItem = styled.span`
   border-right: solid 1px #c7c7c7;
   background-color: ${({ colorStyles }) => colorStyles.bgColor};
   color: ${({ colorStyles }) => colorStyles.numColor};
-  font: bold 1.2rem 'RobotoMono';
+  font: bold 1.2rem 'Roboto';
   text-align: left;
   ${({ colorStyles }) => (colorStyles.bgColor === '#bcff2e' || colorStyles.bgColor === '#ffab2e'
     ? '&:hover {cursor: pointer;}'
