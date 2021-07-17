@@ -108,7 +108,7 @@ class Login extends React.Component {
               e.preventDefault();
               this.handleIsFormSubmitChange(true);
               if (!hasError) {
-                console.log(data);
+                console.log(data);//eslint-disable-line
               }
             }}
           >

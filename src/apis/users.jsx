@@ -7,7 +7,7 @@ export const getUsersBooking = async (Id) => {
     const response = await axios.get(UsersURL + Id);
     return (response.data.bookingId);
   } catch (err) {
-    console.log(err);
+    console.log(err);//eslint-disable-line
   }
   return ('');
 };

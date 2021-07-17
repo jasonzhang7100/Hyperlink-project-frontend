@@ -41,12 +41,11 @@ const Button = styled.button`
   &:hover {
     cursor: pointer;
   }
-  ${(props) =>
-    ({
-      true: css`
+  ${(props) => ({
+    true: css`
         background-color: grey;
       `,
-    }[props.disabled || false])}
+  }[props.disabled || false])}
 `;
 
 const Error = styled.div`
@@ -79,7 +78,7 @@ class CheckoutForm extends React.Component {
     else this.setState({ error: undefined });
   };
 
-  //add user details to mongodb through backend.
+  // add user details to mongodb through backend.
   addBooking = async () => {
     const json = JSON.stringify(BOOKING_INFO);
     await axios
@@ -90,7 +89,7 @@ class CheckoutForm extends React.Component {
         },
       })
       .then((result) => {
-        console.log(result);
+        console.log(result);//eslint-disable-line
       })
       .catch((error) => {
         if (error.response) {
@@ -118,15 +117,15 @@ class CheckoutForm extends React.Component {
   };
 
   setPayment = async () => {
-    const { stripe, elements } = this.props;
+    const { stripe, elements } = this.props;//eslint-disable-line
 
     if (!stripe || !elements) {
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
+    const cardElement = elements.getElement(CardElement);//eslint-disable-line
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
+    const { error, paymentMethod } = await stripe.createPaymentMethod({//eslint-disable-line
       type: 'card',
       card: cardElement,
     });
@@ -139,7 +138,7 @@ class CheckoutForm extends React.Component {
         isButtonDisabled: false,
       });
     } else {
-      //when the card details are valid.
+      // when the card details are valid.
       // send token to backend here
       this.setState({
         error: undefined,
@@ -150,7 +149,7 @@ class CheckoutForm extends React.Component {
       try {
         // send payment info to backend
         const { id } = paymentMethod;
-        const { price, email } = this.props;
+        const { price, email } = this.props;//eslint-disable-line
         const paymentPrice = price * 0.5 * 100;
         const response = await axios.post(`${BASE_URL}/api/stripe/charge`, {
           amount: paymentPrice,
@@ -160,7 +159,7 @@ class CheckoutForm extends React.Component {
 
         // check whether the payment was successful.
         if (response.data.success) {
-          //when payment was successful
+          // when payment was successful
           this.setState({
             confirmMessage: 'payment successful!',
             isButtonDisabled: true,
@@ -170,7 +169,7 @@ class CheckoutForm extends React.Component {
           // after successful payment, move to the next step.
           this.handleClick();
         }
-      } catch (error) {
+      } catch (error) {//eslint-disable-line
         // when payment was unsuccessful
         this.setState({
           error: error.message,
@@ -188,20 +187,20 @@ class CheckoutForm extends React.Component {
     // try to add the booking details first.
     await this.addBooking();
 
-    if (!this.state.error) {
+    if (!this.state.error) {//eslint-disable-line
       await this.setPayment();
     }
   };
 
   handleClick = () => {
-    const { handlePaidStatus, handleNextStep } = this.props;
+    const { handlePaidStatus, handleNextStep } = this.props;//eslint-disable-line
     handlePaidStatus();
     handleNextStep();
   };
 
   render() {
     const { error, confirmMessage, isButtonDisabled } = this.state;
-    const { price } = this.props;
+    const { price } = this.props;//eslint-disable-line
     const paymentPrice = price * 0.5;
     return (
       <>
@@ -218,17 +217,22 @@ class CheckoutForm extends React.Component {
           {error && <Error>{error}</Error>}
           {confirmMessage && <Transaction>{confirmMessage}</Transaction>}
           <div>
-            Order total: AU${price}
+            Order total: AU$
+            {price}
             <br />
             <br />
-            <b>Payment total (50%): AU${paymentPrice}</b>
+            <b>
+              Payment total (50%): AU$
+              {paymentPrice}
+            </b>
           </div>
           <FormStatement>
             By proceeding, I agree with the terms of the license agreement,
             privacy policy and terms and conditions.
           </FormStatement>
           <Button type="submit" disabled={isButtonDisabled}>
-            Pay AU${paymentPrice}
+            Pay AU$
+            {paymentPrice}
           </Button>
           <br />
         </Form>
@@ -239,25 +243,23 @@ class CheckoutForm extends React.Component {
 }
 
 const InjectedCheckoutForm = ({
-  price,
-  email,
-  handlePaidStatus,
-  handleNextStep,
-}) => {
-  return (
-    <ElementsConsumer>
-      {({ elements, stripe }) => (
-        <CheckoutForm
-          elements={elements}
-          stripe={stripe}
-          price={price}
-          email={email}
-          handlePaidStatus={handlePaidStatus}
-          handleNextStep={handleNextStep}
-        />
-      )}
-    </ElementsConsumer>
-  );
-};
+  price,//eslint-disable-line
+  email,//eslint-disable-line
+  handlePaidStatus,//eslint-disable-line
+  handleNextStep,//eslint-disable-line
+}) => (
+  <ElementsConsumer>
+    {({ elements, stripe }) => (
+      <CheckoutForm
+        elements={elements}
+        stripe={stripe}
+        price={price}
+        email={email}
+        handlePaidStatus={handlePaidStatus}
+        handleNextStep={handleNextStep}
+      />
+    )}
+  </ElementsConsumer>
+);
 
 export default InjectedCheckoutForm;

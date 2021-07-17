@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-regular-svg-icons";
-import BookingInfo from "../../../components/BookingInfo";
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
+import BookingInfo from '../../../components/BookingInfo';
 
 const Container = styled.div`
   text-align: center;
@@ -50,7 +50,6 @@ const Confirm = () => (
 // 加个按钮。如果付款成功，点击按钮发送formDAta给后端
 
 Confirm.propTypes = {
-  paid: PropTypes.bool.isRequired,
   formData: PropTypes.shape({
     name: PropTypes.string,
     mobile: PropTypes.number,
