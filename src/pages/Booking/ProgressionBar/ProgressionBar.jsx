@@ -57,14 +57,14 @@ const StageDescription = styled.div`
 
 const ProgressionBar = ({ step }) => {
   const stepTable = [
-    { stage: 1, description: 'Booking Details' },
-    { stage: 2, description: 'Payment' },
-    { stage: 3, description: 'Confirm' },
+    { key: 1, stage: 1, description: 'Booking Details' },
+    { key: 2, stage: 2, description: 'Payment' },
+    { key: 3, stage: 3, description: 'Confirm' },
   ];
   return (
     <Container>
-      {stepTable.map(({ stage, description }) => (
-        <StageWrapper>
+      {stepTable.map(({ key, stage, description }) => (
+        <StageWrapper key={key}>
           <Stage state={step}>{stage}</Stage>
           <StageDescription>{description}</StageDescription>
         </StageWrapper>
