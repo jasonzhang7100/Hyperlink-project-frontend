@@ -1,7 +1,8 @@
+// Third page of Mybooking part, Confirm edit of booking
 import React from 'react';
 // import styled from 'styled-components';
 
-class EditBooking extends React.Component {
+class ConfirmEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,10 +13,10 @@ class EditBooking extends React.Component {
   render() {
     return (
       <>
-        Here is edit booking page
+        Here is edit Confirm Edit page
       </>
     );
   }
 }
 
-export default EditBooking;
+export default ConfirmEdit;

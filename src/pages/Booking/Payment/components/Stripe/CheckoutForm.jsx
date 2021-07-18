@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { CardElement, ElementsConsumer } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import styled, { css } from 'styled-components';
 
-import { BASE_URL, BOOKING_INFO } from '../../constant';
+import { BASE_URL } from '../../constant';
+import addBooking from '../../../../../apis/addBooking';
 
 const Form = styled.form`
   margin: 1.25rem auto;
@@ -38,12 +40,12 @@ const Button = styled.button`
   border-radius: 0.2rem;
   background-color: rgb(24, 28, 77);
   color: #fff;
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
+
   ${(props) => ({
     true: css`
         background-color: grey;
+        cursor: initial;
       `,
   }[props.disabled || false])}
 `;
@@ -78,104 +80,91 @@ class CheckoutForm extends React.Component {
     else this.setState({ error: undefined });
   };
 
+  setConfirmMessageAndButton = (confirmMessage, isButtonDisabled) => {
+    this.setState({
+      confirmMessage,
+      isButtonDisabled,
+    });
+  };
+
   // add user details to mongodb through backend.
-  addBooking = async () => {
-    const json = JSON.stringify(BOOKING_INFO);
-    await axios
-      .post(`${BASE_URL}/api/bookings`, json, {
-        headers: {
-          // Overwrite Axios's automatically set Content-Type
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((result) => {
-        console.log(result);//eslint-disable-line
-      })
-      .catch((error) => {
-        if (error.response) {
-          // Request made and server responded
-          this.setState({
-            error: error.response.data,
-            confirmMessage: undefined,
-            isButtonDisabled: false,
-          });
-        } else if (error.request) {
-          // The request was made but no response was received
-          this.setState({
-            error: error.request,
-            confirmMessage: undefined,
-            isButtonDisabled: false,
-          });
-        } else {
-          this.setState({
-            error: error.message,
-            confirmMessage: undefined,
-            isButtonDisabled: false,
-          });
-        }
-      });
+  addBookingToBackend = async () => {
+    const { formData } = this.props;
+    this.setErrorMessage();
+    this.setConfirmMessageAndButton('Save booking information......', true);
+    try {
+      const response = await addBooking(formData);
+      this.setConfirmMessageAndButton('Booking information is Saved !!', true);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        // Request made and server responded
+        error.message = error.response.data;
+      } else if (error.request) {
+        // The request was made but no response was received
+        error.message = 'The request was made but no response was received, try again later';
+      }
+      this.setErrorMessage(error);
+      this.setConfirmMessageAndButton(undefined, false);
+    }
+    return null;
   };
 
   setPayment = async () => {
-    const { stripe, elements } = this.props;//eslint-disable-line
+    // eslint-disable-next-line react/prop-types
+    const { stripe, elements } = this.props;
 
     if (!stripe || !elements) {
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);//eslint-disable-line
+    // eslint-disable-next-line react/prop-types
+    const cardElement = elements.getElement(CardElement);
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({//eslint-disable-line
+    // eslint-disable-next-line react/prop-types
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: cardElement,
     });
 
     if (error) {
       // when the card details are not valid.
-      this.setState({
-        error: error.message,
-        confirmMessage: undefined,
-        isButtonDisabled: false,
-      });
+      this.setErrorMessage(error);
+      this.setConfirmMessageAndButton(undefined, false);
     } else {
       // when the card details are valid.
       // send token to backend here
-      this.setState({
-        error: undefined,
-        confirmMessage: 'the payment is being processed......',
-        isButtonDisabled: true,
-      });
+      this.setErrorMessage();
+      this.setConfirmMessageAndButton(
+        'the payment is being processed......',
+        true,
+      );
 
       try {
         // send payment info to backend
         const { id } = paymentMethod;
-        const { price, email } = this.props;//eslint-disable-line
-        const paymentPrice = price * 0.5 * 100;
+        const {
+          formData: { paidAmount, emailAddress },
+        } = this.props;
+        const paymentPrice = paidAmount * 100;
         const response = await axios.post(`${BASE_URL}/api/stripe/charge`, {
           amount: paymentPrice,
           id,
-          receipt_email: email,
+          receipt_email: emailAddress,
         });
 
         // check whether the payment was successful.
         if (response.data.success) {
           // when payment was successful
-          this.setState({
-            confirmMessage: 'payment successful!',
-            isButtonDisabled: true,
-          });
-          // after successful payment, add the user details to db.
-          // this.addUser();
-          // after successful payment, move to the next step.
-          this.handleClick();
+          this.setConfirmMessageAndButton('payment successful!', true);
+          // eslint-disable-next-line consistent-return
+          return response.data.success;
         }
-      } catch (error) {//eslint-disable-line
+        // eslint-disable-next-line no-shadow
+      } catch (error) {
         // when payment was unsuccessful
-        this.setState({
-          error: error.message,
-          confirmMessage: undefined,
-          isButtonDisabled: false,
-        });
+        this.setErrorMessage(error);
+        this.setConfirmMessageAndButton(undefined, false);
       }
     }
   };
@@ -184,24 +173,33 @@ class CheckoutForm extends React.Component {
     // Block native form submission.
     event.preventDefault();
 
-    // try to add the booking details first.
-    await this.addBooking();
+    const { error } = this.state;
 
-    if (!this.state.error) {//eslint-disable-line
-      await this.setPayment();
-    }
+    let paymentResponse = false;
+    let bookingRes = false;
+    // eslint-disable-next-line no-unused-expressions
+    !error && (paymentResponse = await this.setPayment());
+    // eslint-disable-next-line no-unused-expressions
+    paymentResponse && (bookingRes = await this.addBookingToBackend());
+    // eslint-disable-next-line no-unused-expressions
+    bookingRes && this.handleClick(bookingRes);
   };
 
-  handleClick = () => {
-    const { handlePaidStatus, handleNextStep } = this.props;//eslint-disable-line
+  handleClick = (bookingRes) => {
+    const { handlePaidStatus, handleNextStep, handleFormData } = this.props;
     handlePaidStatus();
+    handleFormData(bookingRes);
     handleNextStep();
   };
 
   render() {
+    // console.log(this.props.formData);
+    // console.log(this.props.date);
     const { error, confirmMessage, isButtonDisabled } = this.state;
-    const { price } = this.props;//eslint-disable-line
-    const paymentPrice = price * 0.5;
+    const {
+      formData: { paidAmount },
+    } = this.props;
+    const price = paidAmount * 2;
     return (
       <>
         <Form onSubmit={this.handleSubmit}>
@@ -223,7 +221,7 @@ class CheckoutForm extends React.Component {
             <br />
             <b>
               Payment total (50%): AU$
-              {paymentPrice}
+              {paidAmount}
             </b>
           </div>
           <FormStatement>
@@ -232,34 +230,49 @@ class CheckoutForm extends React.Component {
           </FormStatement>
           <Button type="submit" disabled={isButtonDisabled}>
             Pay AU$
-            {paymentPrice}
+            {paidAmount}
           </Button>
           <br />
         </Form>
-        {/* <Button onClick={this.addBooking}>add booking (TEST)</Button> */}
+        {/* <Button onClick={this.addBookingToBackend}>add booking (TEST)</Button> */}
       </>
     );
   }
 }
 
+CheckoutForm.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  formData: PropTypes.object.isRequired,
+  handlePaidStatus: PropTypes.func.isRequired,
+  handleFormData: PropTypes.func.isRequired,
+  handleNextStep: PropTypes.func.isRequired,
+};
+
 const InjectedCheckoutForm = ({
-  price,//eslint-disable-line
-  email,//eslint-disable-line
-  handlePaidStatus,//eslint-disable-line
-  handleNextStep,//eslint-disable-line
+  formData,
+  handlePaidStatus,
+  handleFormData,
+  handleNextStep,
 }) => (
   <ElementsConsumer>
     {({ elements, stripe }) => (
       <CheckoutForm
         elements={elements}
         stripe={stripe}
-        price={price}
-        email={email}
+        formData={formData}
         handlePaidStatus={handlePaidStatus}
+        handleFormData={handleFormData}
         handleNextStep={handleNextStep}
       />
     )}
   </ElementsConsumer>
 );
 
+InjectedCheckoutForm.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  formData: PropTypes.object.isRequired,
+  handlePaidStatus: PropTypes.func.isRequired,
+  handleFormData: PropTypes.func.isRequired,
+  handleNextStep: PropTypes.func.isRequired,
+};
 export default InjectedCheckoutForm;
