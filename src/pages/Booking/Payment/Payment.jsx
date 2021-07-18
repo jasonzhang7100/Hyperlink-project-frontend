@@ -21,28 +21,46 @@ const PUBLIC_KEY = 'pk_test_51JAT9YC8FjBDUp9B7ovNxTZYvGyOeuWnLvddN3VrH0I5sfleL0e
 const stripeTestPromise = loadStripe(PUBLIC_KEY);
 
 const Payment = ({
-  price, email, handlePaidStatus, handleNextStep,
-}) => (
-  <PaymentContainer>
-    <PaymentTitle>Payment</PaymentTitle>
-    <div>We will secure your spot once we receive your payment.</div>
-    <br />
-    <div>Pay with your credit card.</div>
-    <Elements stripe={stripeTestPromise}>
-      <CheckoutForm
-        price={price}
-        email={email}
-        handlePaidStatus={handlePaidStatus}
-        handleNextStep={handleNextStep}
-      />
-    </Elements>
-  </PaymentContainer>
-);
+  date,
+  formData,
+  handlePaidStatus,
+  handleFormData,
+  handleNextStep,
+}) => {
+  const newFormData = {
+    bookingDate: date,
+    numOfGuests: formData.guestNumber,
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    emailAddress: formData.email,
+    phoneNumber: formData.phoneNumber,
+    dateOfBirth: formData.birthDate,
+    paidAmount: formData.price * 0.5,
+  };
+  return (
+    <PaymentContainer>
+      <PaymentTitle>Payment</PaymentTitle>
+      <div>We will secure your spot once we receive your payment.</div>
+      <br />
+      <div>Pay with your credit card.</div>
+      <Elements stripe={stripeTestPromise}>
+        <CheckoutForm
+          formData={newFormData}
+          handlePaidStatus={handlePaidStatus}
+          handleFormData={handleFormData}
+          handleNextStep={handleNextStep}
+        />
+      </Elements>
+    </PaymentContainer>
+  );
+};
 
 Payment.propTypes = {
-  price: PropTypes.number.isRequired,
-  email: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  formData: PropTypes.object.isRequired,
   handlePaidStatus: PropTypes.func.isRequired,
+  handleFormData: PropTypes.func.isRequired,
   handleNextStep: PropTypes.func.isRequired,
 };
 
