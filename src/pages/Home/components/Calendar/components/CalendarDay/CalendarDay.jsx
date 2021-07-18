@@ -28,7 +28,7 @@ const CalendarDay = ({
   const colorStyles = setDayStyles(day, value, monthlySessions);
   const handleDayClick = (date, style) => {
     if (style.bgColor === '#bcff2e' || style.bgColor === '#ffab2e') {
-      history.push(`/booking/${date.format('YYYY-MM-DD').toString()}`);
+      history.push('/booking', { date: date.format('YYYY-MM-DD').toString() });
     }
   };
 

@@ -65,8 +65,8 @@ class Booking extends React.Component {
 
   render() {
     const { step, formData, paid } = this.state;
-    const { match } = this.props;
-    const { date } = match.params;
+    const { location } = this.props;
+    const { date } = location.state;
     return (
       <Container>
         <ProgressionBar step={step} />
@@ -99,8 +99,8 @@ class Booking extends React.Component {
 }
 
 Booking.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
+  location: PropTypes.shape({
+    state: PropTypes.shape({
       date: PropTypes.string,
     }),
   }).isRequired,
