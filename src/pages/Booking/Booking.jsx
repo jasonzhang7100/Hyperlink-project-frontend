@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
 import Form from '../../components/Form';
 import Payment from './Payment';
 import Confirm from './Confirm';
