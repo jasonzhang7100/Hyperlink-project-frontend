@@ -79,7 +79,11 @@ const BookingInfo = ({ date, id, guestAmount }) => {
           <GuestAmount>
             {guestAmount}
             {' '}
+<<<<<<< HEAD
             {guestAmount === 1 ? 'Guest' : 'Guests'}
+=======
+            Guest
+>>>>>>> 0a095bf (Change structure of Mybooking, link pages)
           </GuestAmount>
         </BookingDetails>
       </BookingContent>
