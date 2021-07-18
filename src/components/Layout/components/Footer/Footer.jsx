@@ -21,11 +21,13 @@ const FooterContent = styled.div`
   justify-content: space-between;
   padding-bottom: 1rem;
   width: 80%;
+  font-family: 'Roboto';
 `;
 
 const ContentItem = styled.span``;
 
 const FooterInstruction = styled.p`
+  font: 0.9rem 'Roboto';
   margin: 0.2rem 0;
 `;
 
