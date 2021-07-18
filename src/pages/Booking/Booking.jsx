@@ -80,10 +80,11 @@ class Booking extends React.Component {
         )}
         {step === 2 && (
           <Payment
-            price={formData.price || 0}
-            email={formData.email || 'customer@example.com'}
+            date={date}
+            formData={formData}
             handlePaidStatus={this.handlePaidStatus}
             handleNextStep={this.handleNextStep}
+            handleFormData={this.handleFormData}
           />
         )}
         {step === 3 && <Confirm paid={paid} formData={formData} />}
