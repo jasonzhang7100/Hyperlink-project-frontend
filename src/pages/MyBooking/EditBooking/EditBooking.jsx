@@ -12,26 +12,6 @@ import FormSubTitle from '../../../components/FormSubTitle';
 import FormWrapper from '../../../components/FormWrapper';
 import FlexRow from '../../../components/FlexRow';
 
-// const EditBooking = ({ BookingDetails, BookingList, handleNextStep }) => {
-//   const handleClick = () => {
-//     handleNextStep();
-//   };
-
-//   return (
-//     <>
-//       <Container>
-//         Here is edit booking page
-//         {BookingDetails}
-//         {BookingList}
-//         <EditButton onClick={handleClick}>
-//           Confirm
-//         </EditButton>
-//       </Container>
-//     </>
-//   );
-// };
-
-
 const Container = styled.div`
   display: inline-block;
   background-color: white;
@@ -129,12 +109,12 @@ class EditBooking extends React.Component {
     // const {
     //   guestNumber, firstName, lastName, email, phoneNumber,
     // } = data;
-    const { handleFormData, handleNextStep } = this.props;
-    const formData = {};
-    Object.entries(data).map(([key, value]) => {
-      formData[key] = value.value;
-      return formData;
-    });
+    const { handleNextStep } = this.props;
+    // const formData = {};
+    // Object.entries(data).map(([key, value]) => {
+    //   formData[key] = value.value;
+    //   return formData;
+    // });
 
     if (!hasError) {
       // axios.put('http://localhost:3333/bookings/1', {
@@ -146,7 +126,7 @@ class EditBooking extends React.Component {
       //   phoneNumber: phoneNumber.value,
       // });
 
-      handleFormData(formData);
+      // handleFormData(formData);
       handleNextStep();
     }
   };
@@ -155,7 +135,7 @@ class EditBooking extends React.Component {
     const { data } = this.state;
 
     // wait for order number from previous page
-    const { orderNumber } = this.props;
+    // const { formData } = this.props;
     const error = this.getError(data);
     // const hasError = Object.keys(error).length > 0;
 
@@ -165,7 +145,6 @@ class EditBooking extends React.Component {
           <FormTitle variant="primary">Booking Details</FormTitle>
           <FormSubTitle font="normal">
             Order number
-            {orderNumber}
           </FormSubTitle>
           <FormWrapper
             onSubmit={(e) => {
@@ -263,18 +242,13 @@ class EditBooking extends React.Component {
 }
 
 EditBooking.propTypes = {
-  orderNumber: PropTypes.string.isRequired,
   selectedDate: PropTypes.string.isRequired,
   guestNumber: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   phoneNumber: PropTypes.string.isRequired,
-  handleFormData: PropTypes.func.isRequired,
   handleNextStep: PropTypes.func.isRequired,
-
-  BookingList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  BookingDetails: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default EditBooking;
