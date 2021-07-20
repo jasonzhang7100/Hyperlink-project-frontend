@@ -10,10 +10,6 @@ const appendAuthToken = (config) => {
   return { ...config, headers: { Authorization, ...config.header } };
 };
 
-export const post = (url, data, config = {}) => {
-  return axios.post(url, data, appendAuthToken(config));
-};
+export const post = (url, data, config = {}) => axios.post(url, data, appendAuthToken(config));
 
-export const get = (url, config = {}) => {
-  return axios.get(url,appendAuthToken(config));
-}
+export const get = (url, config = {}) => axios.get(url, appendAuthToken(config));

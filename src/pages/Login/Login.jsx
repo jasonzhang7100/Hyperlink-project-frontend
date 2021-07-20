@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import Input from '../../components/Input';
 import FormItem from '../../components/FormItem';
 import validate from '../../components/Form/validate';
@@ -10,7 +11,6 @@ import FormSubTitle from '../../components/FormSubTitle';
 import FormWrapper from '../../components/FormWrapper';
 import { loginUser } from '../../apis/auth';
 import { setToken } from '../../utils/authentication';
-import PropTypes from 'prop-types';
 
 const Container = styled.div`
   background-color: white;
