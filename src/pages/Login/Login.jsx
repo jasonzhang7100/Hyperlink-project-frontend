@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import Input from '../../components/Input';
 import FormItem from '../../components/FormItem';
 import validate from '../../components/Form/validate';
@@ -9,6 +8,9 @@ import ButtonContinue from '../../components/ButtonContinue';
 import FormTitle from '../../components/FormTitle';
 import FormSubTitle from '../../components/FormSubTitle';
 import FormWrapper from '../../components/FormWrapper';
+import { loginUser } from '../../apis/auth';
+import { setToken } from '../../utils/authentication';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
   background-color: white;
@@ -35,6 +37,8 @@ class Login extends React.Component {
         },
       },
       isFormSubmit: false,
+      error: null,
+      isLoading: false,
     };
 
     this.handleDataChange = this.handleDataChange.bind(this);
@@ -93,8 +97,23 @@ class Login extends React.Component {
     return error;
   }
 
+  login = () => {
+    this.setState({ error: null, isLoading: true }, () => {
+      const { data: loginData } = this.state;
+      loginUser(loginData.email.value, loginData.password.value)
+        .then((data) => {
+          this.setState({ isLoading: false }, () => {
+            setToken(data.token);
+            const redirecTo = '/mybooking';
+            const { history } = this.props;
+            history.replace(redirecTo);
+          });
+        }).catch((error) => this.setState({ error, isLoading: false }));
+    });
+  }
+
   render() {
-    const { data } = this.state;
+    const { data, error: authError, isLoading } = this.state;
     const error = this.getError(data);
     const hasError = Object.keys(error).length > 0;
 
@@ -138,14 +157,23 @@ class Login extends React.Component {
               />
               <ErrorMsg>{this.getErrorMessage(error, 'password')}</ErrorMsg>
             </FormItem>
-            <Link to="/mybooking">
-              <ButtonContinue>LOGIN</ButtonContinue>
-            </Link>
+            <ButtonContinue onClick={this.login}>LOGIN</ButtonContinue>
+            {!!authError && (
+            <ErrorMsg>login fail</ErrorMsg>
+            )}
+            {!!isLoading && (
+            <ErrorMsg>Isloading</ErrorMsg>
+            )}
           </FormWrapper>
         </Container>
       </>
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.string.isRequired,
+  replace: PropTypes.func.isRequired,
+};
 
 export default Login;
