@@ -6,7 +6,6 @@ axios.defaults.baseURL = 'http://localhost:3000/api';
 const appendAuthToken = (config) => {
   const jwtToken = getToken();
   const Authorization = jwtToken && `Bearer ${jwtToken}`;
-  console.log(Authorization);
   return { ...config, headers: { Authorization, ...config.header } };
 };
 
