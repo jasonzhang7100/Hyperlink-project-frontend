@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CardElement, ElementsConsumer } from '@stripe/react-stripe-js';
-import axios from 'axios';
+// import axios from 'axios';
 import styled, { css } from 'styled-components';
 
-import { BASE_URL } from '../../constant';
+// import { BASE_URL } from '../../constant';
 import addBooking from '../../../../../apis/addBooking';
 
 const Form = styled.form`
@@ -87,41 +87,16 @@ class CheckoutForm extends React.Component {
     });
   };
 
-  // add user details to mongodb through backend.
-  addBookingToBackend = async () => {
-    const { formData } = this.props;
-    this.setErrorMessage();
-    this.setConfirmMessageAndButton('Save booking information......', true);
-    try {
-      const response = await addBooking(formData);
-      this.setConfirmMessageAndButton('Booking information is Saved !!', true);
-      return response;
-    } catch (error) {
-      if (error.response) {
-        // Request made and server responded
-        error.message = error.response.data;
-      } else if (error.request) {
-        // The request was made but no response was received
-        error.message = 'The request was made but no response was received, try again later';
-      }
-      this.setErrorMessage(error);
-      this.setConfirmMessageAndButton(undefined, false);
-    }
-    return null;
-  };
-
   setPayment = async () => {
-    // eslint-disable-next-line react/prop-types
-    const { stripe, elements } = this.props;
+    const { stripe, elements } = this.props; // eslint-disable-line
 
     if (!stripe || !elements) {
       return;
     }
 
-    // eslint-disable-next-line react/prop-types
-    const cardElement = elements.getElement(CardElement);
+    const cardElement = elements.getElement(CardElement); // eslint-disable-line
 
-    // eslint-disable-next-line react/prop-types
+    // eslint-disable-next-line
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: cardElement,
@@ -133,7 +108,6 @@ class CheckoutForm extends React.Component {
       this.setConfirmMessageAndButton(undefined, false);
     } else {
       // when the card details are valid.
-      // send token to backend here
       this.setErrorMessage();
       this.setConfirmMessageAndButton(
         'the payment is being processed......',
@@ -141,28 +115,26 @@ class CheckoutForm extends React.Component {
       );
 
       try {
-        // send payment info to backend
         const { id } = paymentMethod;
-        const {
-          formData: { paidAmount, emailAddress },
-        } = this.props;
-        const paymentPrice = paidAmount * 100;
-        const response = await axios.post(`${BASE_URL}/api/stripe/charge`, {
-          amount: paymentPrice,
-          id,
-          receipt_email: emailAddress,
-        });
+        const { formData } = this.props;
+        const bookingAndPayment = { ...formData, id };
 
-        // check whether the payment was successful.
-        if (response.data.success) {
-          // when payment was successful
-          this.setConfirmMessageAndButton('payment successful!', true);
-          // eslint-disable-next-line consistent-return
-          return response.data.success;
-        }
-        // eslint-disable-next-line no-shadow
+        // send booking info (and payment id) to backend
+        const response = await addBooking(bookingAndPayment);
+
+        // when payment was successful
+        this.setConfirmMessageAndButton('payment successful!', true);
+        return response.data; // eslint-disable-line
+
+        // eslint-disable-next-line
       } catch (error) {
-        // when payment was unsuccessful
+        // when payment/addBooking was unsuccessful
+        if (error.response) {
+          error.message = error.response.data.message;
+        } else if (error.request) {
+          // The request was made but no response was received
+          error.message = 'The request was made but no response was received, try again later';
+        }
         this.setErrorMessage(error);
         this.setConfirmMessageAndButton(undefined, false);
       }
@@ -175,14 +147,13 @@ class CheckoutForm extends React.Component {
 
     const { error } = this.state;
 
-    let paymentResponse = false;
-    let bookingRes = false;
+    let paymentResponse = {};
     // eslint-disable-next-line no-unused-expressions
     !error && (paymentResponse = await this.setPayment());
     // eslint-disable-next-line no-unused-expressions
-    paymentResponse && (bookingRes = await this.addBookingToBackend());
-    // eslint-disable-next-line no-unused-expressions
-    bookingRes && this.handleClick(bookingRes);
+    if (paymentResponse) {
+      !!paymentResponse.success && this.handleClick(paymentResponse); // eslint-disable-line
+    }
   };
 
   handleClick = (bookingRes) => {
@@ -193,13 +164,11 @@ class CheckoutForm extends React.Component {
   };
 
   render() {
-    // console.log(this.props.formData);
-    // console.log(this.props.date);
     const { error, confirmMessage, isButtonDisabled } = this.state;
     const {
-      formData: { paidAmount },
+      formData: { paymentAmount },
     } = this.props;
-    const price = paidAmount * 2;
+    const price = paymentAmount * 2;
     return (
       <>
         <Form onSubmit={this.handleSubmit}>
@@ -221,7 +190,7 @@ class CheckoutForm extends React.Component {
             <br />
             <b>
               Payment total (50%): AU$
-              {paidAmount}
+              {paymentAmount}
             </b>
           </div>
           <FormStatement>
@@ -230,11 +199,10 @@ class CheckoutForm extends React.Component {
           </FormStatement>
           <Button type="submit" disabled={isButtonDisabled}>
             Pay AU$
-            {paidAmount}
+            {paymentAmount}
           </Button>
           <br />
         </Form>
-        {/* <Button onClick={this.addBookingToBackend}>add booking (TEST)</Button> */}
       </>
     );
   }
