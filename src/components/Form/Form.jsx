@@ -26,6 +26,7 @@ class Form extends React.Component {
     super(props);
 
     this.state = {
+
       data: {
         guestNumber: initialData,
         firstName: initialData,
