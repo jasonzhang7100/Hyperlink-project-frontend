@@ -35,7 +35,7 @@ const Payment = ({
     emailAddress: formData.email,
     phoneNumber: formData.phoneNumber,
     dateOfBirth: formData.birthDate,
-    paidAmount: formData.price * 0.5,
+    paymentAmount: formData.price,
   };
   return (
     <PaymentContainer>

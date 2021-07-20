@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CardElement, ElementsConsumer } from '@stripe/react-stripe-js';
-import axios from 'axios';
+// import axios from 'axios';
 import styled, { css } from 'styled-components';
 
-import { BASE_URL } from '../../constant';
+// import { BASE_URL } from '../../constant';
 import addBooking from '../../../../../apis/addBooking';
 
 const Form = styled.form`
@@ -88,40 +88,38 @@ class CheckoutForm extends React.Component {
   };
 
   // add user details to mongodb through backend.
-  addBookingToBackend = async () => {
-    const { formData } = this.props;
-    this.setErrorMessage();
-    this.setConfirmMessageAndButton('Save booking information......', true);
-    try {
-      const response = await addBooking(formData);
-      this.setConfirmMessageAndButton('Booking information is Saved !!', true);
-      return response;
-    } catch (error) {
-      if (error.response) {
-        // Request made and server responded
-        error.message = error.response.data;
-      } else if (error.request) {
-        // The request was made but no response was received
-        error.message = 'The request was made but no response was received, try again later';
-      }
-      this.setErrorMessage(error);
-      this.setConfirmMessageAndButton(undefined, false);
-    }
-    return null;
-  };
+  // addBookingToBackend = async () => {
+  //   const { formData } = this.props;
+  //   this.setErrorMessage();
+  //   this.setConfirmMessageAndButton('Save booking information......', true);
+  //   try {
+  //     const response = await addBooking(formData);
+  //     this.setConfirmMessageAndButton('Booking information is Saved !!', true);
+  //     return response;
+  //   } catch (error) {
+  //     if (error.response) {
+  //       // Request made and server responded
+  //       error.message = error.response.data;
+  //     } else if (error.request) {
+  //       // The request was made but no response was received
+  //       error.message = 'The request was made but no response was received, try again later';
+  //     }
+  //     this.setErrorMessage(error);
+  //     this.setConfirmMessageAndButton(undefined, false);
+  //   }
+  //   return null;
+  // };
 
   setPayment = async () => {
-    // eslint-disable-next-line react/prop-types
-    const { stripe, elements } = this.props;
+    const { stripe, elements } = this.props; // eslint-disable-line
 
     if (!stripe || !elements) {
       return;
     }
 
-    // eslint-disable-next-line react/prop-types
-    const cardElement = elements.getElement(CardElement);
+    const cardElement = elements.getElement(CardElement); // eslint-disable-line
 
-    // eslint-disable-next-line react/prop-types
+    // eslint-disable-next-line
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: cardElement,
@@ -141,28 +139,45 @@ class CheckoutForm extends React.Component {
       );
 
       try {
-        // send payment info to backend
         const { id } = paymentMethod;
-        const {
-          formData: { paidAmount, emailAddress },
-        } = this.props;
-        const paymentPrice = paidAmount * 100;
-        const response = await axios.post(`${BASE_URL}/api/stripe/charge`, {
-          amount: paymentPrice,
-          id,
-          receipt_email: emailAddress,
-        });
+        const { formData } = this.props;
+        const bookingAndPayment = { ...formData, id };
+        console.log(bookingAndPayment);
+
+        // send booking info (and payment id) to backend
+        const response = await addBooking(bookingAndPayment); // 需要确认：返回信息的格式！！
+        // 返回格式：如果payment失败，返回success(fail) + message,
+        // 如果payment成功：返回success(true) + message + booking全部字段。
+
+        // const response = { message: 'Payment Failed', success: false };
+
+        // const response = await axios.post(`${BASE_URL}/api/stripe/charge`, {
+        //   amount: paymentPrice,
+        //   id,
+        //   receipt_email: emailAddress,
+        // });
 
         // check whether the payment was successful.
-        if (response.data.success) {
+        if (response.success) {
           // when payment was successful
           this.setConfirmMessageAndButton('payment successful!', true);
           // eslint-disable-next-line consistent-return
-          return response.data.success;
+          return response; // 需要确认：返回信息的格式！！
         }
-        // eslint-disable-next-line no-shadow
-      } catch (error) {
         // when payment was unsuccessful
+        this.setErrorMessage(response);
+        this.setConfirmMessageAndButton(undefined, false);
+
+        // eslint-disable-next-line
+      } catch (error) {
+        // addBooking was unsuccessful
+        if (error.response) {
+          // Request made and server responded
+          error.message = error.response.data;
+        } else if (error.request) {
+          // The request was made but no response was received
+          error.message = 'The request was made but no response was received, try again later';
+        }
         this.setErrorMessage(error);
         this.setConfirmMessageAndButton(undefined, false);
       }
@@ -175,14 +190,14 @@ class CheckoutForm extends React.Component {
 
     const { error } = this.state;
 
-    let paymentResponse = false;
-    let bookingRes = false;
+    let paymentResponse = false; // 需要确认：返回信息的格式！！
+    // let bookingRes = false;
     // eslint-disable-next-line no-unused-expressions
-    !error && (paymentResponse = await this.setPayment());
+    !error && (paymentResponse = await this.setPayment()); // 需要确认：返回信息的格式！！
     // eslint-disable-next-line no-unused-expressions
-    paymentResponse && (bookingRes = await this.addBookingToBackend());
+    // paymentResponse && (bookingRes = await this.addBookingToBackend());
     // eslint-disable-next-line no-unused-expressions
-    bookingRes && this.handleClick(bookingRes);
+    paymentResponse && this.handleClick(paymentResponse); // 需要确认：返回信息的格式！！
   };
 
   handleClick = (bookingRes) => {
@@ -197,9 +212,9 @@ class CheckoutForm extends React.Component {
     // console.log(this.props.date);
     const { error, confirmMessage, isButtonDisabled } = this.state;
     const {
-      formData: { paidAmount },
+      formData: { paymentAmount },
     } = this.props;
-    const price = paidAmount * 2;
+    const paidAmount = paymentAmount * 0.5;
     return (
       <>
         <Form onSubmit={this.handleSubmit}>
@@ -216,7 +231,7 @@ class CheckoutForm extends React.Component {
           {confirmMessage && <Transaction>{confirmMessage}</Transaction>}
           <div>
             Order total: AU$
-            {price}
+            {paymentAmount}
             <br />
             <br />
             <b>
