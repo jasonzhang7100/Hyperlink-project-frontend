@@ -78,7 +78,7 @@ color: #818181;
 margin-top:150px`;
 
 const ViewBooking = ({
-  BookingDetails, BookingList, handleNextStep, ready,
+  BookingDetails, BookingList, handleNextStep, ready, handleFormData,
 }) => (
   <>
     <BookingCard>
@@ -105,7 +105,9 @@ const ViewBooking = ({
             date={ready ? BookingDetails[index - 1][0].bookingDate : ''}
             id={ready ? BookingDetails[index - 1][0].bookingId : '0'}
             guestAmount={ready ? BookingDetails[index - 1][0].guestAmount : 0}
+            index={index}
             handleNextStep={handleNextStep}
+            handleFormData={handleFormData}
           />
         ))
       )}
@@ -123,6 +125,7 @@ ViewBooking.propTypes = {
   BookingList: PropTypes.arrayOf(PropTypes.string),
   BookingDetails: PropTypes.arrayOf(PropTypes.array),
   handleNextStep: PropTypes.func.isRequired,
+  handleFormData: PropTypes.func.isRequired,
   ready: PropTypes.bool,
 };
 

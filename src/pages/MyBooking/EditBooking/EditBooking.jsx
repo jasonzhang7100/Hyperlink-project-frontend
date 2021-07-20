@@ -133,6 +133,9 @@ class EditBooking extends React.Component {
 
   render() {
     const { data } = this.state;
+    // 数据都在formData里面
+    const { formData } = this.props;
+    console.log(formData);
 
     // wait for order number from previous page
     // const { formData } = this.props;
@@ -249,6 +252,10 @@ EditBooking.propTypes = {
   email: PropTypes.string.isRequired,
   phoneNumber: PropTypes.string.isRequired,
   handleNextStep: PropTypes.func.isRequired,
+  formData: PropTypes.arrayOf(PropTypes.string),
 };
 
+EditBooking.defaultProps = {
+  formData: [],
+};
 export default EditBooking;

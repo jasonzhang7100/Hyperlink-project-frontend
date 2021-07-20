@@ -22,8 +22,12 @@ class MyBooking extends React.Component {
     this.getBookingDetails();
   }
 
-  handleFormData(formData) {
-    this.setState({ formData });
+  handleFormData(index) {
+    const { BookingDetails } = this.state;
+    // console.log('here'+BookingDetails)
+    this.setState({
+      formData: BookingDetails[index - 1],
+    });
   }
 
   handleNextStep() {
@@ -67,6 +71,7 @@ class MyBooking extends React.Component {
   render() {
     const {
       step, formData, BookingDetails, BookingList, ready,
+      index,
     } = this.state;
     // {console.log(ready?this.state.BookingDetails[1][0]:'not')}
     return (
@@ -79,13 +84,15 @@ class MyBooking extends React.Component {
             handleNextStep={this.handleNextStep}
             handleFormData={this.handleFormData}
             ready={ready}
+            index={index}
           />
         )}
         {step === 2 && (
           <EditBooking
-            formData={formData}
-            // handlePaidStatus={this.handlePaidStatus}
+            BookingDetails={BookingDetails}
             handleNextStep={this.handleNextStep}
+            handleFormData={this.handleFormData}
+            formData={formData}
           />
         )}
         {step === 3
