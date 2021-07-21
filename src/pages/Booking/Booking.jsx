@@ -87,7 +87,13 @@ class Booking extends React.Component {
             handleFormData={this.handleFormData}
           />
         )}
-        {step === 3 && <Confirm paid={paid} formData={formData} />}
+        {step === 3 && (
+        <Confirm
+          paid={paid}
+          formData={formData}
+          ConfirmTitle="Booking Confirmed"
+        />
+        )}
         <GoBackButton onClick={this.handlePreStep}>
           {'<'}
           {' '}

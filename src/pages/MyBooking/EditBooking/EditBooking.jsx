@@ -49,7 +49,8 @@ class EditBooking extends React.Component {
     this.handleDataChange = this.handleDataChange.bind(this);
     this.handleIsFormSubmitChange = this.handleIsFormSubmitChange.bind(this);
     this.handleBlurredChange = this.handleBlurredChange.bind(this);
-    // this.handleContinueClick = this.handleContinueClick.bind(this);
+    this.handleContinueClick = this.handleContinueClick.bind(this);
+    // this.handleFormData=this.handleFormData.bind(this);
   }
 
   handleDataChange(event) {
@@ -110,7 +111,9 @@ class EditBooking extends React.Component {
     //   guestNumber, firstName, lastName, email, phoneNumber,
     // } = data;
     const { handleNextStep } = this.props;
-    // const formData = {};
+    const { handleFormData } = this.props;
+    const formData = this.props;
+    // console.log("here"+formData)
     // Object.entries(data).map(([key, value]) => {
     //   formData[key] = value.value;
     //   return formData;
@@ -126,7 +129,7 @@ class EditBooking extends React.Component {
       //   phoneNumber: phoneNumber.value,
       // });
 
-      // handleFormData(formData);
+      handleFormData(formData);
       handleNextStep();
     }
   };
@@ -236,7 +239,7 @@ class EditBooking extends React.Component {
               />
               <ErrorMsg>{this.getErrorMessage(error, 'phoneNumber')}</ErrorMsg>
             </FormItem>
-            <ButtonContinue>SUBMIT</ButtonContinue>
+            <ButtonContinue onClick={this.handleContinueClick}>SUBMIT</ButtonContinue>
           </FormWrapper>
         </Container>
       </>
@@ -253,6 +256,7 @@ EditBooking.propTypes = {
   phoneNumber: PropTypes.string.isRequired,
   handleNextStep: PropTypes.func.isRequired,
   formData: PropTypes.arrayOf(PropTypes.string),
+  handleFormData: PropTypes.func.isRequired,
 };
 
 EditBooking.defaultProps = {
