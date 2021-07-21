@@ -1,12 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Admin from './pages/Admin';
-import Booking from './pages/Booking';
-import MyBooking from './pages/MyBooking';
+
+import { commonRoutes, authRoutes } from './routes/allRoutes';
+import RouteMiddleware from './routes/RouteMiddleware';
+
 import Roboto from './assets/fonts/Roboto/Roboto-Regular.ttf';
 import Raleway from './assets/fonts/Raleway/Raleway-VariableFont_wght.ttf';
 import Baloo from './assets/fonts/Baloo/Baloo2-Bold.ttf';
@@ -42,11 +41,26 @@ const App = () => (
     <GlobalStyle />
     <Layout>
       <Switch>
-        <Route path="/login" component={Login} />
-        <Route path="/admin" component={Admin} />
-        <Route path="/mybooking" component={MyBooking} />
-        <Route path="/booking" component={Booking} />
-        <Route path="/" component={Home} />
+        {commonRoutes.map((route) => (
+          <RouteMiddleware
+            path={route.path}
+            component={route.component}
+            key={route.path}
+            isAuthProtected={false}
+            exact
+          />
+        ))}
+
+        {authRoutes.map((route) => (
+          <RouteMiddleware
+            path={route.path}
+            layout={Layout}
+            component={route.component}
+            key={route.path}
+            isAuthProtected
+            exact
+          />
+        ))}
       </Switch>
     </Layout>
   </BrowserRouter>
