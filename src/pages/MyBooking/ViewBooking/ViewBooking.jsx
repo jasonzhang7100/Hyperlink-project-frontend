@@ -122,6 +122,7 @@ const ViewBooking = ({
 );
 
 ViewBooking.propTypes = {
+  // 下两条type验证有问题
   BookingList: PropTypes.arrayOf(PropTypes.string),
   BookingDetails: PropTypes.arrayOf(PropTypes.array),
   handleNextStep: PropTypes.func.isRequired,

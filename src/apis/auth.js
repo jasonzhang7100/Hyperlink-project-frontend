@@ -1,6 +1,6 @@
 import { post } from './axios';
 
-const API_LOGIN_URL = '/auth';
+const API_LOGIN_URL = '/login';
 
 export const loginUser = (email, password) => {
   const data = {

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
 import Input from '../../components/Input';
 import FormItem from '../../components/FormItem';
 import validate from '../../components/Form/validate';
@@ -9,16 +10,17 @@ import ButtonContinue from '../../components/ButtonContinue';
 import FormTitle from '../../components/FormTitle';
 import FormSubTitle from '../../components/FormSubTitle';
 import FormWrapper from '../../components/FormWrapper';
+
 import { loginUser } from '../../apis/auth';
 import { setToken } from '../../utils/authentication';
 
 const Container = styled.div`
+  display: inline-block;
+  margin: 0 auto;
+  padding: 3rem 10rem;
+  border-radius: 20px;
   background-color: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-  display: inline-block;
-  border-radius: 20px;
-  padding: 3rem 10rem;
-  margin: 0 auto;
 `;
 
 class Login extends React.Component {
@@ -104,13 +106,13 @@ class Login extends React.Component {
         .then((data) => {
           this.setState({ isLoading: false }, () => {
             setToken(data.token);
-            const redirecTo = '/mybooking';
             const { history } = this.props;
-            history.replace(redirecTo);
+            history.replace('/mybooking');
           });
-        }).catch((error) => this.setState({ error, isLoading: false }));
+        })
+        .catch((error) => this.setState({ error, isLoading: false }));
     });
-  }
+  };
 
   render() {
     const { data, error: authError, isLoading } = this.state;
@@ -127,7 +129,7 @@ class Login extends React.Component {
               e.preventDefault();
               this.handleIsFormSubmitChange(true);
               if (!hasError) {
-                console.log(data);//eslint-disable-line
+                console.log(data); //eslint-disable-line
               }
             }}
           >
@@ -158,12 +160,8 @@ class Login extends React.Component {
               <ErrorMsg>{this.getErrorMessage(error, 'password')}</ErrorMsg>
             </FormItem>
             <ButtonContinue onClick={this.login}>LOGIN</ButtonContinue>
-            {!!authError && (
-            <ErrorMsg>login fail</ErrorMsg>
-            )}
-            {!!isLoading && (
-            <ErrorMsg>Isloading</ErrorMsg>
-            )}
+            {!!authError && <ErrorMsg>login fail</ErrorMsg>}
+            {!!isLoading && <ErrorMsg>Isloading</ErrorMsg>}
           </FormWrapper>
         </Container>
       </>
@@ -172,8 +170,9 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  history: PropTypes.string.isRequired,
-  replace: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    replace: PropTypes.func,
+  }).isRequired,
 };
 
 export default Login;
