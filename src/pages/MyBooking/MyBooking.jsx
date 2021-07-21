@@ -11,7 +11,7 @@ class MyBooking extends React.Component {
     super(props);
     this.state = {
       step: 1,
-      formData: {},
+      formData: [],
       UserId: 1,
       BookingList: [],
       BookingDetails: [],
@@ -22,17 +22,20 @@ class MyBooking extends React.Component {
     this.getBookingDetails();
   }
 
-  handleFormData(index) {
-    const { BookingDetails } = this.state;
-    // console.log('here'+BookingDetails)
+  handleFormData(formData) {
+    // const { BookingDetails } = this.state;
+
     this.setState({
-      formData: BookingDetails[index - 1],
+      formData,
     });
+    // console.log(this.state.formData);
   }
 
   handleNextStep() {
     const { step } = this.state;
+    console.log(step);
     if (step < 3) this.setState({ step: step + 1 });
+    if (step === 3) this.setState({ step: 1 });
   }
 
   async getBookingDetails() {
@@ -71,7 +74,6 @@ class MyBooking extends React.Component {
   render() {
     const {
       step, formData, BookingDetails, BookingList, ready,
-      index,
     } = this.state;
     // {console.log(ready?this.state.BookingDetails[1][0]:'not')}
     return (
@@ -84,7 +86,7 @@ class MyBooking extends React.Component {
             handleNextStep={this.handleNextStep}
             handleFormData={this.handleFormData}
             ready={ready}
-            index={index}
+            formData={formData}
           />
         )}
         {step === 2 && (
@@ -99,6 +101,7 @@ class MyBooking extends React.Component {
         && (
         <ConfirmEdit
           formData={formData}
+          handleNextStep={this.handleNextStep}
         />
         )}
       </>

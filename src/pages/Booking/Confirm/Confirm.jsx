@@ -29,19 +29,19 @@ const Line = styled.div`
   background-color: #c7c7c7;
 `;
 
-const Confirm = ({ formData }) => (
+const Confirm = ({ formData, ConfirmTitle }) => (
+
   <Container>
     {formData ? (
       <>
         <FontAwesomeIcon color="#181b50" size="4x" icon={faCheckCircle} />
-        <Title className="title">Booking Confirmed</Title>
+        <Title className="title">{ConfirmTitle}</Title>
         <ConfirmedMessage>
           Thank you John, we&apos;re looking forward to see you soon!
           <br />
           Confirmation email send to &nbsp;
           <a href="www.gmail.com">xxx@gmail.com</a>
         </ConfirmedMessage>
-
         <Line />
 
         <BookingInfo date="2021-07-06" id="#12345" guestAmount={1} />
@@ -63,5 +63,6 @@ Confirm.propTypes = {
     booking: PropTypes.string,
     price: PropTypes.number,
   }).isRequired,
+  ConfirmTitle: PropTypes.string.isRequired,
 };
 export default Confirm;

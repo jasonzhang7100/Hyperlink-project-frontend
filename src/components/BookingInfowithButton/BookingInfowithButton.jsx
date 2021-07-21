@@ -43,10 +43,10 @@ const EditButton = styled.div`
 
 //= =================== BOOKINGINFO COMPONENT ====================
 const BookingInfowithButton = ({
-  date, id, guestAmount, handleNextStep, handleFormData, index,
+  date, id, guestAmount, handleNextStep, handleFormData, formData,
 }) => {
   const handleClick = () => {
-    handleFormData(index);
+    handleFormData(formData);
     handleNextStep();
   };
 
@@ -72,7 +72,7 @@ BookingInfowithButton.propTypes = {
   guestAmount: PropTypes.number.isRequired,
   handleNextStep: PropTypes.func.isRequired,
   handleFormData: PropTypes.func.isRequired,
-  index: PropTypes.string.isRequired,
+  formData: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default BookingInfowithButton;

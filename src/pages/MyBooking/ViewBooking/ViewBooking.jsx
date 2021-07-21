@@ -105,7 +105,7 @@ const ViewBooking = ({
             date={ready ? BookingDetails[index - 1][0].bookingDate : ''}
             id={ready ? BookingDetails[index - 1][0].bookingId : '0'}
             guestAmount={ready ? BookingDetails[index - 1][0].guestAmount : 0}
-            index={index}
+            formData={ready ? BookingDetails[index - 1][0] : []}
             handleNextStep={handleNextStep}
             handleFormData={handleFormData}
           />

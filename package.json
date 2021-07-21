@@ -56,7 +56,7 @@
     "husky": "^6.0.0",
     "react-refresh": "^0.9.0",
     "style-loader": "^2.0.0",
-    "webpack": "^5.40.0",
+    "webpack": "^5.45.1",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.8.0"
