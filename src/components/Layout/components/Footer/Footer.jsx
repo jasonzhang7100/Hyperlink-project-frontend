@@ -3,11 +3,13 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100vw;
-  height: 15rem;
+  padding-bottom:2rem;
   padding-top: 2rem;
-  padding-left: 10rem;
+  padding-left: 10%;
+  padding-right:10%;
   background-color: rgb(24, 28, 77);
   color: #fff;
+  word-wrap: break-word;
 `;
 
 const FooterTitle = styled.h1`
@@ -18,12 +20,14 @@ const FooterContent = styled.div`
   display: flex;
   justify-content: space-between;
   padding-bottom: 1rem;
-  width: 55rem;
+  width: 80%;
+  font-family: 'Roboto';
 `;
 
 const ContentItem = styled.span``;
 
 const FooterInstruction = styled.p`
+  font: 0.9rem 'Roboto';
   margin: 0.2rem 0;
 `;
 

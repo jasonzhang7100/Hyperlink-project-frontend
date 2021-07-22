@@ -1,40 +1,10 @@
-const sessionData = {
-  date: '2021-07',
-  stateArr: [
-    'available',
-    'closed',
-    'limited',
-    'available',
-    'closed',
-    'available',
-    'limited',
-    'closed',
-    'available',
-    'available',
-    'closed',
-    'available',
-    'available',
-    'available',
-    'limited',
-    'closed',
-    'available',
-    'available',
-    'available',
-    'limited',
-    'closed',
-    'fully booked',
-    'closed',
-    'available',
-    'available',
-    'available',
-    'available',
-    'available',
-    'closed',
-    'fully booked',
-    'fully booked',
-  ],
+const getSessionData = async (date) => {
+  const year = date.format('YYYY');
+  const month = date.format('MM');
+  const url = `http://localhost:3000/api/sessions/group/${year}/${month}`;
+  const res = await fetch(url);
+  const result = await res.json();
+  return result;
 };
-
-const getSessionData = () => sessionData;
 
 export default getSessionData;

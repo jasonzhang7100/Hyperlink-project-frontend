@@ -9,6 +9,9 @@ import bgImg from '../../assets/images/bgImg.jpeg';
 import otherBgImg from '../../assets/images/otherBgImg.jpg';
 
 const Main = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   overflow: hidden;
   min-height: 100vh;
   background: url(${({ img }) => img}) no-repeat center;

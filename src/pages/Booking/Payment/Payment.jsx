@@ -1,36 +1,66 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 
-const StepButton = styled.button`
-  width: 6.5rem;
-  height: 2rem;
-  border: none;
-  border-radius: 0.2rem;
-  background-color: rgb(24, 28, 77);
-  color: #fff;
-  &:hover {
-    cursor: pointer;
-  }
+import CheckoutForm from './components/Stripe';
+
+const PaymentContainer = styled.div`
+  font-family: Roboto;
+  text-align: center;
 `;
 
-const Payment = ({ price, handlePaidStatus, handleNextStep }) => {
-  const handleClick = () => {
-    handlePaidStatus();
-    handleNextStep();
+const PaymentTitle = styled.div`
+  margin: 1.25rem auto 1.25rem;
+  font-size: 1.5rem;
+`;
+
+const PUBLIC_KEY = 'pk_test_51JAT9YC8FjBDUp9B7ovNxTZYvGyOeuWnLvddN3VrH0I5sfleL0eATlWon3tn1i4MfeSHrpVS02wrqKArGD8FgQny00DW4yXprq';
+
+const stripeTestPromise = loadStripe(PUBLIC_KEY);
+
+const Payment = ({
+  date,
+  formData,
+  handlePaidStatus,
+  handleFormData,
+  handleNextStep,
+}) => {
+  const newFormData = {
+    bookingDate: date,
+    numOfGuests: formData.guestNumber,
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    emailAddress: formData.email,
+    phoneNumber: formData.phoneNumber,
+    dateOfBirth: formData.birthDate,
+    paymentAmount: formData.price * 0.5,
   };
   return (
-    <>
-      显示要付的金额
-      {price}
-      <StepButton onClick={handleClick}>PLACE ORDER</StepButton>
-    </>
+    <PaymentContainer>
+      <PaymentTitle>Payment</PaymentTitle>
+      <div>We will secure your spot once we receive your payment.</div>
+      <br />
+      <div>Pay with your credit card.</div>
+      <Elements stripe={stripeTestPromise}>
+        <CheckoutForm
+          formData={newFormData}
+          handlePaidStatus={handlePaidStatus}
+          handleFormData={handleFormData}
+          handleNextStep={handleNextStep}
+        />
+      </Elements>
+    </PaymentContainer>
   );
 };
 
 Payment.propTypes = {
-  price: PropTypes.number.isRequired,
+  date: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  formData: PropTypes.object.isRequired,
   handlePaidStatus: PropTypes.func.isRequired,
+  handleFormData: PropTypes.func.isRequired,
   handleNextStep: PropTypes.func.isRequired,
 };
 
